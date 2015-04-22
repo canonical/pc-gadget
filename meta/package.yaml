@@ -1,0 +1,19 @@
+name: generic-amd64
+vendor: Sergio Schvezov <sergio.schvezov@canonical.com>
+icon: meta/ubuntu.png
+version: 1.1
+type: oem
+
+config:
+    ubuntu-core:
+        autopilot: true
+
+oem:
+    branding:
+        name:  amd64
+        subname: generic
+
+    hardware:
+        bootloader: grub
+        architecture: amd64
+        partition-layout: system-AB
