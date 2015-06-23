@@ -17,3 +17,6 @@ oem:
         bootloader: grub
         architecture: amd64
         partition-layout: system-AB
+        boot-assets:
+            files:
+                - path: grub.cfg
