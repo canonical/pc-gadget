@@ -16,7 +16,7 @@ oem:
     hardware:
         bootloader: grub
         architecture: amd64
-        partition-layout: system-AB
+        partition-layout: minimal
         boot-assets:
             files:
                 - path: grub.cfg
