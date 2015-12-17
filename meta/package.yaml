@@ -1,14 +1,14 @@
 name: canonical-pc
 vendor: Sergio Schvezov <sergio.schvezov@canonical.com>
 icon: meta/ubuntu.png
-version: 2.0
-type: oem
+version: 2.1
+type: gadget
 
 config:
     ubuntu-core:
         autopilot: true
 
-oem:
+gadget:
     branding:
         name:  amd64
         subname: generic
