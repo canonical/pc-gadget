@@ -1,7 +1,8 @@
 name: canonical-pc
-vendor: Sergio Schvezov <sergio.schvezov@canonical.com>
-icon: meta/ubuntu.png
-version: 2.1
+version: 3.0
+summary: AMD64 generic package
+description: |
+ This package contains a simple OEM snappy package for system configuration
 type: gadget
 
 config:
