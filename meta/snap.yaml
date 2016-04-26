@@ -1,5 +1,5 @@
 name: canonical-pc
-version: 3.1
+version: 3.2
 summary: AMD64 generic package
 description: |
  This package contains a simple OEM snappy package for system configuration
