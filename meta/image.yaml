@@ -2,7 +2,7 @@ partitions:
  - role: ESP
    size: 50M
    files:
-    - source: grubx64.efi.signed
+    - source: grubx64.efi
       dest: EFI/boot/grubx64.efi
     - source: shim.efi.signed
       dest: EFI/boot/bootx64.efi
