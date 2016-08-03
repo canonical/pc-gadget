@@ -1,23 +1,6 @@
-name: canonical-pc
-version: 3.2
+name: pc
+version: 16.04-0.2
 summary: AMD64 generic package
 description: |
  This package contains a simple OEM snappy package for system configuration
 type: gadget
-
-config:
-    ubuntu-core:
-        autopilot: true
-
-gadget:
-    branding:
-        name:  amd64
-        subname: generic
-
-    hardware:
-        bootloader: grub
-        architecture: amd64
-        partition-layout: minimal
-        boot-assets:
-            files:
-                - path: grub.cfg
