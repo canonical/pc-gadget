@@ -2,6 +2,7 @@ bootloader: grub
 volumes:
   pc:
     structure:
+      - label: system-boot
       - type: esp
         size: 50M
         content:
