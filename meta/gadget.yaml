@@ -3,7 +3,7 @@ volumes:
   pc:
     structure:
       - label: system-boot
-      - type: esp
+        type: esp
         size: 50M
         content:
           - source: grubx64.efi
