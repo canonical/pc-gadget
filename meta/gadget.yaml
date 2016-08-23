@@ -3,7 +3,7 @@ volumes:
     bootloader: grub
     structure:
       - type: mbr
-        size: 446
+        size: 440
         content:
           - image: pc-boot.img
       - name: EFI System
