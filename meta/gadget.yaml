@@ -8,7 +8,7 @@ volumes:
           - image: pc-boot.img
       - name: BIOS Boot
         type: DA,21686148-6449-6E6F-744E-656564454649
-        size: 4M
+        size: 1M
         content:
           - image: pc-core.img
       - name: EFI System
