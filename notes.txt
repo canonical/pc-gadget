@@ -28,6 +28,7 @@ NONSNAP_GRUB_MODULES="
 # ones that we don't think are useful in snappy.
 GRUB_MODULES="
 	all_video
+	biosdisk
 	boot
 	cat
 	chain
