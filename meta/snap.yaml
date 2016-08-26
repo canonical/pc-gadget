@@ -4,3 +4,5 @@ summary: AMD64 generic package
 description: |
  This package contains a simple OEM snappy package for system configuration
 type: gadget
+architectures:
+    - amd64
