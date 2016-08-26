@@ -2,6 +2,7 @@ volumes:
   pc:
     bootloader: grub
     structure:
+      - name: mbr
       - type: mbr
         size: 440
         content:
@@ -9,6 +10,7 @@ volumes:
       - name: BIOS Boot
         type: DA,21686148-6449-6E6F-744E-656564454649
         size: 1M
+        offset-write: mbr+92
         content:
           - image: pc-core.img
       - name: EFI System
