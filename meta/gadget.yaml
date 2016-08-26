@@ -3,7 +3,7 @@ volumes:
     bootloader: grub
     structure:
       - name: mbr
-      - type: mbr
+        type: mbr
         size: 440
         content:
           - image: pc-boot.img
