@@ -1,5 +1,5 @@
 name: pc
-version: 16.04-0.5
+version: 16.04-0.6
 summary: AMD64 generic package
 description: |
  This package contains a simple OEM snappy package for system configuration
