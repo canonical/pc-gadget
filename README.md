@@ -23,7 +23,7 @@ To build the gadget snap locally please use `snapcraft`.
 
 ## Launchpad Mirror and Automatic Builds.
 
-All commits from the master branch of https://github.com/snapcore/generic-amd64
+All commits from the master branch of https://github.com/snapcore/pc-amd64
 are automatically mirrored by Launchpad to the https://launchpad.net/snap-pc
 project.
 
