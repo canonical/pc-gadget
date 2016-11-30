@@ -30,4 +30,5 @@ project.
 The master branch is automatically built from the launchpad mirror and
 published into the snap store to the edge channel.
 
-You can find build history and other controls here: https://code.launchpad.net/~zyga/+snap/pc
+You can find build history and other controls here: https://code.launchpad.net/~zyga/+snap/pc-amd64
+  
