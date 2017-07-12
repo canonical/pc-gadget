@@ -1,14 +1,19 @@
 name: pc
-version: 16.04-0.8
-summary: AMD64 generic package
-description: |
- This package contains a simple OEM snappy package for system configuration
+version: '16.04-0.8'
 type: gadget
-architectures:
-    - amd64
-confinement: strict
+summary: PC gadget for generic devices
+description: |
+    This gadget enables generic pc devices to work with Ubuntu Core
 grade: stable
+confinement: strict
+icon: icon.png
+
 parts:
-    prebuilt:
-        plugin: dump
-        source: prebuilt
+  grub:
+    source: .
+    plugin: make
+    build-packages:
+      - grub-efi-amd64-signed
+      - grub-pc-bin
+      - shim-signed
+        
