@@ -55,7 +55,7 @@ GRUB_MODULES = \
 	video
 
 all:
-	cp /usr/lib/grub/i386-pc/boot.img pc-boot.img
+	dd if=/usr/lib/grub/i386-pc/boot.img of=pc-boot.img bs=440 count=1
 	echo -n -e '\x90\x90' | dd of=pc-boot.img seek=102 bs=1 conv=notrunc
 	grub-mkimage -O i386-pc -o pc-core.img -p '(,gpt2)/EFI/ubuntu' $(GRUB_MODULES)
 	# The first sector of the core image requires an absolute pointer to the
