@@ -1,19 +1,3 @@
-NONSNAP_GRUB_MODULES = \
-btrfs \
-hfsplus \
-iso9660 \
-part_apple \
-part_msdos \
-password_pbkdf2 \
-zfs \
-zfscrypt \
-zfsinfo \
-lvm \
-mdraid09 \
-mdraid1x \
-raid5rec \
-raid6rec \
-
 # filtered list of modules included in the signed EFI grub image, excluding
 # ones that we don't think are useful in snappy.
 GRUB_MODULES = \
@@ -52,6 +36,20 @@ GRUB_MODULES = \
 	squash4 \
 	test \
 	true \
+	btrfs \
+	hfsplus \
+	iso9660 \
+	part_apple \
+	part_msdos \
+	password_pbkdf2 \
+	zfs \
+	zfscrypt \
+	zfsinfo \
+	lvm \
+	mdraid09 \
+	mdraid1x \
+	raid5rec \
+	raid6rec \
 	video
 
 all:
@@ -69,4 +67,4 @@ all:
 
 install:
 	install -m 644 pc-boot.img pc-core.img shim.efi.signed grubx64.efi $(DESTDIR)/
-	install -m 644 grub.conf grub.cfg $(DESTDIR)/
+	install -m 644 grub.conf grub-cpc.cfg $(DESTDIR)/
