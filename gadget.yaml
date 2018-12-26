@@ -26,3 +26,5 @@ volumes:
             target: EFI/boot/bootx64.efi
           - source: grub.cfg
             target: EFI/ubuntu/grub.cfg
+          - source: mmx64.efi
+            target: EFI/boot/mmx64.efi

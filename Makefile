@@ -65,8 +65,9 @@ all:
 	/bin/echo -n -e '\x01\x08\x00\x00' | dd of=pc-core.img seek=500 bs=1 conv=notrunc
 	cp $(SNAPCRAFT_STAGE)/usr/lib/shim/shimx64.efi.signed shim.efi.signed
 	cp $(SNAPCRAFT_STAGE)/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed grubx64.efi
+	cp $(SNAPCRAFT_STAGE)/usr/lib/shim/mmx64.efi mmx64.efi
 
 
 install:
-	install -m 644 pc-boot.img pc-core.img shim.efi.signed grubx64.efi $(DESTDIR)/
+	install -m 644 pc-boot.img pc-core.img shim.efi.signed grubx64.efi mmx64.efi $(DESTDIR)/
 	install -m 644 grub.conf grub.cfg $(DESTDIR)/
