@@ -1,5 +1,5 @@
 name: pc
-version: '16.04-0.9'
+version: '16.04-0.10'
 type: gadget
 summary: PC gadget for generic devices
 description: |
