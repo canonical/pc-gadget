@@ -1,5 +1,5 @@
 name: pc
-version: '18-1'
+version: '18-2'
 type: gadget
 base: core18
 summary: PC gadget for generic devices
