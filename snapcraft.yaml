@@ -1,6 +1,8 @@
 name: pc
-version: '18-2'
+version: '20-0.1'
 type: gadget
+#build-base: core20
+# FIXME: none
 base: core18
 summary: PC gadget for generic devices
 description: |
