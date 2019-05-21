@@ -22,15 +22,18 @@ filesystem issues.
 The revery partition contains the following file layout:
 
 /system/<name>/snaps/{base.snap,kernel.snap,other...}
-/system/<name>/assertions.txt
+/system/<name>/assertions/<short-name>
 
-Where <name> is an encoded date/time like 20190521-1213. The
-parition is FAT so we need to put the assertions in the "stream"
-format on disk. The assertions.txt must include exactly one
-model assertion.
+Where <name> is an encoded date/time like 20190521-1213. The parition
+is FAT so we need to put the assertions in the "stream" format on disk
+with a short name. The assertion files must include exactly one model
+assertion.
 
 The names of the kernel and the base are fixed. This allows
-us a static grub.cfg menu.
+us a static grub.cfg menu. The selection of the recovery system will
+happen at a later time from initramfs. To do this the recovery system
+will boot into a sepecial "select" mode and then the selection is set
+via a grubenv "snap_recovery_system="
 
 All snaps in snaps/ must be verifiable using the assertions.txt
 stream and they will be checked during a "recovery" or "install"
@@ -44,7 +47,8 @@ account for now. This will change in a later revision of this doc.
 * always boot into system-recovery partition
 ** check if system is setup for normal booting
 *** if so, chainboot into the system-boot partition
-*** if not, boot into selected bootmode, set snap_recovery_mode to "recovery" or "install"
+*** if not, boot into recovery bootmode, set snap_mode="recovery"
+**** later the initamfs will allow selecting different recovery systems
 
 We always boot into the system-recovery partition. It contain the
 /efi/BOOT/BOOTX64.EFI (shim.efi.signed) and grubx86.efi. We will
@@ -78,5 +82,16 @@ Similar to "firstboot" mode we have today. The differences:
 ** do an "install" into tmpfs to have all snapd available (e.g. nm)
 
 
+# Testing
 
-
+Hacky way to test this:
+```
+$ wget https://people.canonical.com/~mvo/tmp/mvo-amd64.signed
+$ snap download pc-kernel=18 core18 snapd
+$ cd pc-amd64-gadget
+$ snapcraft
+$ cd ..
+$ ubuntu-image mvo-amd64.signed --extra-snaps ./pc_20-0.1_amd64.snap --extra-snaps ./pc-kernel_*.snap --extra-snaps ./core18_*.snap --extra-snaps ./snapd_*.snap
+# use the OVMF.fd from bionc - disco will fail to start
+$ kvm -m 1400 -snapshot  -bios /usr/share/qemu/OVMF.fd  pc.img 
+```
