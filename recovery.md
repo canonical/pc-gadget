@@ -21,14 +21,20 @@ filesystem issues.
 
 The revery partition contains the following file layout:
 
-/system/<name>/snaps/{core18_xxx.snap,snapd_xxx.snap,pc-kernel_xxx.snap,pc_xxx.snap}
+/system/<name>/snaps/{base.snap,kernel.snap,other...}
 /system/<name>/assertions.txt
 
 Where <name> is an encoded date/time like 20190521-1213. The
-parition is fat so we need to put the assertions in the "stream"
+parition is FAT so we need to put the assertions in the "stream"
 format on disk. The assertions.txt must include exactly one
 model assertion.
 
+The names of the kernel and the base are fixed. This allows
+us a static grub.cfg menu.
+
+All snaps in snaps/ must be verifiable using the assertions.txt
+stream and they will be checked during a "recovery" or "install"
+boot.
 
 # Boot sequence
 
