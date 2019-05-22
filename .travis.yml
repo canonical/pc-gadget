@@ -1,0 +1,10 @@
+language: python
+os: linux
+dist: xenial
+sudo: enabled
+script:
+  - sudo apt-get update
+  - sudo apt-get install --yes --no-install-recommends snapd
+  - sudo snap wait system seed.loaded
+  - sudo snap install --classic snapcraft
+  - sudo snapcraft
