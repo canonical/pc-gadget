@@ -19,20 +19,20 @@ filesystem issues.
 
 # Recovery system file layout
 
-The revery partition contains the following file layout:
+The recovery partition contains the following file layout:
 
 /system/<name>/snaps/{base.snap,kernel.snap,other...}
 /system/<name>/assertions/<short-name>
 
-Where <name> is an encoded date/time like 20190521-1213. The parition
+Where <name> is an encoded date/time like 20190521-1213. The partition
 is FAT so we need to put the assertions in the "stream" format on disk
-with a short name. The assertion files must include exactly one model
-assertion.
+with short filenames. The assertion files all together must include
+exactly one model assertion.
 
 The names of the kernel and the base are fixed. This allows
 us a static grub.cfg menu. The selection of the recovery system will
 happen at a later time from initramfs. To do this the recovery system
-will boot into a sepecial "select" mode and then the selection is set
+will boot into a special "select" mode and then the selection is set
 via a grubenv "snap_recovery_system="
 
 All snaps in snaps/ must be verifiable using the assertions.txt
@@ -48,7 +48,7 @@ account for now. This will change in a later revision of this doc.
 ** check if system is setup for normal booting
 *** if so, chainboot into the system-boot partition
 *** if not, boot into recovery bootmode, set snap_mode="recovery"
-**** later the initamfs will allow selecting different recovery systems
+**** later the initramfs will allow selecting different recovery systems
 
 We always boot into the system-recovery partition. It contain the
 /efi/BOOT/BOOTX64.EFI (shim.efi.signed) and grubx86.efi. We will
@@ -93,5 +93,5 @@ $ snapcraft
 $ cd ..
 $ ubuntu-image mvo-amd64.signed --extra-snaps ./pc_20-0.1_amd64.snap --extra-snaps ./pc-kernel_*.snap --extra-snaps ./core18_*.snap --extra-snaps ./snapd_*.snap
 # use the OVMF.fd from bionc - disco will fail to start
-$ kvm -m 1400 -snapshot  -bios /usr/share/qemu/OVMF.fd  pc.img 
+$ kvm -m 1500 -snapshot  -bios /usr/share/qemu/OVMF.fd  pc.img 
 ```
