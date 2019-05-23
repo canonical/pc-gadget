@@ -7,21 +7,26 @@ if [ -s $prefix/grubenv ]; then
   load_env
 fi
 
+# FIXME: find a better way? this ensures that someone instructed snapd
+#        to go into "install" mode it actually does that
+if [ "$snap_mode" = "install" ]; then
+    set default=1
+fi
+
 menuentry "Normal mode" {
           search --label "system-boot" --set=root
           chainloader ($root)/efi/boot/grubx64.efi
 }
 
-# FIXME: can we avoid putting snap_recovery_{core,kernel} here?
-set cmdline="snap_mode=recovery snap_recovery_core=$snap_recovery_core snap_revoery_kernel=$snap_kernel ro net.ifnames=0 console=ttyS0 console=tty1 panic=-1"
+# FIXME: can we avoid putting snap_recovery_system here? e.g. by just reading
+#        it from the bootloader env instead of kernel cmdline?
+set cmdline="snap_mode=$snap_mode snap_recovery_system=$snap_recovery_system ro net.ifnames=0 console=ttyS0 console=tty1 panic=-1"
 
 # `snap prepare-image` will setup an initial grubenv for recovery
 # - snap_recovery_system=<name>
-# - snap_recovery_kernel=k_name.snap
-# - snap_recovery_core=c_name.snap
 menuentry "Recovery mode" {
     search --label sys-recover --set=recovery_root
-    loopback loop ($recovery_root)/system/$snap_recovery_system/snaps/$snap_recovery_kernel
+    loopback loop ($recovery_root)/system/$snap_recovery_system/snaps/kernel.snap
     linux (loop)/kernel.img $cmdline
     initrd (loop)/initrd.img
 }
