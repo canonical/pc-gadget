@@ -7,6 +7,11 @@ addons:
     - name: snapcraft
       channel: stable
       classic: true
+    - name: lxd
+      channel: stable
 
 script:
-  - sudo snapcraft
+  - sudo /snap/bin/lxd.migrate -yes
+  - sudo /snap/bin/lxd waitready
+  - sudo /snap/bin/lxd init --auto
+  - sudo snapcraft --use-lxd
