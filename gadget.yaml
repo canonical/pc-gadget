@@ -15,6 +15,7 @@ volumes:
         content:
           - image: pc-core.img
       - name: Recovery
+        role: system-recovery
         filesystem: vfat
         # UEFI will boot the ESP partition by default first
         type: EF,C12A7328-F81F-11D2-BA4B-00A0C93EC93B
