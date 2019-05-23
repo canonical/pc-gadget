@@ -12,16 +12,16 @@ menuentry "Normal mode" {
           chainloader ($root)/efi/boot/grubx64.efi
 }
 
+# FIXME: can we avoid putting snap_recovery_{core,kernel} here?
+set cmdline="snap_mode=recovery snap_recovery_core=$snap_recovery_core snap_revoery_kernel=$snap_kernel ro net.ifnames=0 console=ttyS0 console=tty1 panic=-1"
 
-if [ -z "$snap_recovery_system" ]; then
-   set snap_recovery_system="current"
-fi
-
-set cmdline="snap_mode=recovery ro net.ifnames=0 console=ttyS0 console=tty1 panic=-1"
-
+# `snap prepare-image` will setup an initial grubenv for recovery
+# - snap_recovery_system=<name>
+# - snap_recovery_kernel=k_name.snap
+# - snap_recovery_core=c_name.snap
 menuentry "Recovery mode" {
     search --label sys-recover --set=recovery_root
-    loopback loop ($recovery_root)/system/$snap_recovery_system/snaps/kernel.snap
+    loopback loop ($recovery_root)/system/$snap_recovery_system/snaps/$snap_recovery_kernel
     linux (loop)/kernel.img $cmdline
     initrd (loop)/initrd.img
 }

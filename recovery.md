@@ -24,10 +24,12 @@ The recovery partition contains the following file layout:
 /system/<name>/snaps/{base.snap,kernel.snap,other...}
 /system/<name>/assertions/<short-name>
 
-Where <name> is an encoded date/time like 20190521-1213. The partition
-is FAT so we need to put the assertions in the "stream" format on disk
-with short filenames. The assertion files all together must include
-exactly one model assertion.
+Where <name> is an encoded date/time like 20190521-1213. We will
+use <brand/model> in the name as well once the details are discussed.
+
+The partition is FAT so we need to put the assertions in the "stream"
+format on disk with short filenames. The assertion files all together
+must include exactly one model assertion.
 
 The names of the kernel and the base are fixed. This allows
 us a static grub.cfg menu. The selection of the recovery system will
@@ -56,6 +58,16 @@ present a boot menu with the modes "Normal", "Recovery", "Install".
 
 The "normal" boot mode will just chainboot into the system-boot
 partition and load "grub" from there.
+
+## Very first boot (install)
+
+`snap prepare-image` will setup a grubenv for the recovery that points
+to the right recovery-system. The kernel is booted from that recovery
+system and the initramfs of this kernel will setup the "writable"
+partition, copy the recovery system as into /var/lib/snapd/seed and
+setup grubenv for the "system-boot" partition - then the system is
+booted in "normal" mode and snapd will just do a first time seeding
+(just like today).
 
 
 ## Normal bootmode
