@@ -1,0 +1,12 @@
+language: python
+os: linux
+dist: xenial
+sudo: enabled
+addons:
+  snaps:
+    - name: snapcraft
+      channel: stable
+      classic: true
+
+script:
+  - sudo snapcraft
