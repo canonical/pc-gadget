@@ -37,6 +37,6 @@ set cmdline="root=LABEL=$label snap_core=$snap_core snap_kernel=$snap_kernel ro 
 menuentry "$snap_menuentry" {
     search --label $label --set=writable
     loopback loop ($writable)/system-data/var/lib/snapd/snaps/$snap_kernel
-    linux (loop)/kernel.img $cmdline
+    linux (loop)/kernel.img $cmdline systemd.debug-shell=1
     initrd (loop)/initrd.img
 }
