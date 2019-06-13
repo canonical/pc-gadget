@@ -22,7 +22,7 @@ volumes:
         # max volume label length: 11 chars
         filesystem-label: sys-recover
         # too big? too small?
-        size: 1G
+        size: 1200M
         content:
           - source: grubx64.efi
             target: EFI/boot/grubx64.efi
