@@ -19,7 +19,7 @@ if [ "$snap_mode" = "recover_reboot" ]; then
 fi
 
 menuentry "Normal mode" {
-          search --label "system-boot" --set=root
+          search --label "ubuntu-boot" --set=root
           chainloader ($root)/efi/boot/grubx64.efi
 }
 
@@ -31,7 +31,7 @@ set cmdline="snap_mode=$snap_mode snap_recovery_system=$snap_recovery_system ro 
 # - snap_recovery_system=<name>
 # - snap_recovery_kernel=<name>
 menuentry "Recovery mode" {
-    search --label sys-recover --set=recovery_root
+    search --label ubuntu-seed --set=recovery_root
     loopback loop ($recovery_root)/snaps/$snap_recovery_kernel
     # FIXME: remove debug-shell
     linux (loop)/kernel.img $cmdline systemd.debug-shell=1
