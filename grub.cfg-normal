@@ -31,12 +31,12 @@ elif [ "$snap_mode" = "trying" ]; then
     save_env snap_mode
 fi
 
-set label="writable"
+set label="ubuntu-data"
 set cmdline="root=LABEL=$label snap_core=$snap_core snap_kernel=$snap_kernel ro net.ifnames=0 init=/lib/systemd/systemd console=ttyS0 console=tty1 panic=-1"
 
 menuentry "$snap_menuentry" {
-    search --label $label --set=writable
-    loopback loop ($writable)/system-data/var/lib/snapd/snaps/$snap_kernel
-    linux (loop)/kernel.img $cmdline
+    search --label $label --set=root
+    loopback loop ($root)/system-data/var/lib/snapd/snaps/$snap_kernel
+    linux (loop)/kernel.img $cmdline systemd.debug-shell=1
     initrd (loop)/initrd.img
 }

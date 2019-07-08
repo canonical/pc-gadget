@@ -1,7 +1,8 @@
 name: pc
-version: '18-2'
+version: '20-0.3'
 type: gadget
-base: core18
+#build-base: core18
+base: core20
 summary: PC gadget for generic devices
 description: |
     This gadget enables generic pc devices to work with Ubuntu Core
