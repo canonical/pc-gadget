@@ -38,7 +38,7 @@ will boot into a special "select" mode and then the selection is set
 via a grubenv "snap_recovery_system="
 
 All snaps in snaps/ must be verifiable using the assertions.txt
-stream and they will be checked during a "recovery" or "install"
+stream and they will be checked during a "recover" or "install"
 boot.
 
 # Boot sequence
@@ -49,7 +49,7 @@ account for now. This will change in a later revision of this doc.
 * always boot into system-recovery partition
 ** check if system is setup for normal booting
 *** if so, chainboot into the system-boot partition
-*** if not, boot into recovery bootmode, set snap_mode="recovery"
+*** if not, boot into recovery bootmode, set snap_recovery_mode="recover"
 **** later the initramfs will allow selecting different recovery systems
 
 We always boot into the system-recovery partition. It contain the
