@@ -1,6 +1,6 @@
 # The recovery partition
 
-On Ubuntu Core 20 systems there is a new system-recovery partition. It
+On Ubuntu Core 20 systems there is a new ubuntu-seed partition. It
 is big enough to contain a certain number of recovery "systems" that
 can then be used to recover or reinstall a broken system.
 
@@ -8,14 +8,14 @@ A full "seed" to reinstall on a generic amd64 system is roughly 280MB
 so the recovery partition is sized to 600MB to be able to store two
 recovery systems by default.
 
-The system-recovery partition is next to the system-boot
-partition. Both are vfat as required by UEFI.
+The ubuntu-seed partition is next to the ubuntu-boot partition. Both
+are vfat as required by UEFI.
 
-On full disk encrypted systems the system-boot partition contains the
+On full disk encrypted systems the ubuntu-boot partition contains the
 unpacked kernel(s) to boot init initramfs that then unencrypts the
-"writable" partition. The partitions are separate because we want to
-write to the recovery partition as rarely as possible to avoid
-filesystem issues.
+ubuntu-data ("writable") partition. The partitions are separate
+because we want to write to the recovery partition as rarely as
+possible to avoid filesystem issues.
 
 # Recovery system file layout
 
