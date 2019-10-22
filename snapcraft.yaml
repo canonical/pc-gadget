@@ -1,5 +1,5 @@
 name: pc
-version: '20-0.3'
+version: '20-0.4'
 type: gadget
 #build-base: core18
 base: core18
