@@ -1,5 +1,5 @@
 name: pc
-version: '20-0.3'
+version: '20-0.4'
 type: gadget
 base: core20
 summary: PC gadget for generic devices
