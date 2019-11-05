@@ -1,0 +1,37 @@
+type: model
+authority-id: 7InnfhhgqHTy1GnKMw83FDcBinWaYKbJ
+series: 16
+brand-id: 7InnfhhgqHTy1GnKMw83FDcBinWaYKbJ
+model: ubuntu-core-focal-xnox-amd64
+architecture: amd64
+base: core20
+grade: dangerous
+snaps:
+  -
+    default-channel: 20/edge
+    id: UqFziVZDHLSyO3TqSWgNBoAdHbLI4dAH
+    name: pc
+    type: gadget
+  -
+    default-channel: 20/edge
+    id: pYVQrBcKmBa0mZ4CCN7ExT6jH8rY1hza
+    name: pc-kernel
+    type: kernel
+  -
+    default-channel: latest/edge
+    id: DLqre5XGLbDqg9jPtiAhRRjDuPVa5X1q
+    name: core20
+    type: base
+timestamp: 2020-04-23T20:04:00.0Z
+sign-key-sha3-384: liNgNg92gwg3w61oxMVVqJAZU2c2xuxk3CUDdDENXyqA4fWFpzgdyZZ779tBcXzl
+
+AcLBXAQAAQoABgUCXcGmTwAKCRBmad7QGSpsZ+AFD/4w9h7qat3we5X70AXgaS4ecjNDxalUfoUT
+welp5KemFaTBRkWqj3K3e61L8XYP3cytoFlymfVzN3TgFP6W3byMTcbeuUsqELkmlRMM9uXsneRR
+PwP2p5UWaxf+xqy6vTuAwnlObQ0Hp2XJJq9tot7OzI6GLYw2JWCMkP713KYsazIKVdOCGqYbvFg2
+j70abN0Yy/mZvkjapEgpPBLHYmKwvUCksS3ZFp23v0qNkLl0+4BA5mB19bU7l7hRjvBxevdltWU9
+Etq84PecRVXGNuTh5sl4fnI7y7Nulcxh23efze818jxAyM3FLwoqTHuCJ2p4nrAxlricSUkUjctw
+7ftGUVh1sERcvqK0aPGDVwt0qRAR0itg45TBwFWJofZGGzmUhosGXAI+m0/qGkvKUstYOHq0aQ7U
+2eMKBcBLLIe5jztFnnBaojC8AzJpiNmMZ45Xbxh8AKBCLY1TpKlIhFmGyEg5dkkViZsPJT2a4x7D
+BqzKqYgYGT/G0AHpwGwyykB359kZb8LFbCTnY9H6aqoZaCfcXWPAGO9PhHW212BD8G5WYyxJRkyh
+ClBn7X6jnihq5a3HC45edRrhfc6zzXOLK8warTGBkelnQyp966cVjyJn+9RVDDDf7T4lgbvAHLJp
+MEg1GMRI80LR0KDt2fVGSOUPCstSG3of7YDXdFjbrQ==

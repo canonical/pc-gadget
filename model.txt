@@ -1,0 +1,7 @@
+Cheatsheet to play with models
+
+snapcraft create-key
+snapcraft register-key
+snapcraft list-keys
+cat model.json | snap sign > uc20.model
+
