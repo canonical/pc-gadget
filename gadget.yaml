@@ -14,7 +14,7 @@ volumes:
         offset-write: mbr+92
         content:
           - image: pc-core.img
-      - name: Recovery
+      - name: UbuntuSeed
         role: system-seed
         filesystem: vfat
         # UEFI will boot the ESP partition by default first
@@ -27,3 +27,23 @@ volumes:
             target: EFI/boot/bootx64.efi
           - source: grub.cfg-recovery
             target: EFI/ubuntu/grub.cfg
+      - name: UbuntuBoot
+        role: system-boot
+        filesystem: ext4
+        type: 83,0FC63DAF-8483-4772-8E79-3D69D8477DE4
+        # whats the appropriate size?
+        size: 750M
+        content:
+          - source: grubx64.efi
+            target: EFI/boot/grubx64.efi
+          - source: shim.efi.signed
+            target: EFI/boot/bootx64.efi
+          - source: grub.cfg-normal
+            target: EFI/ubuntu/grub.cfg
+      # XXX: should we define the  "ubuntu-save" partition here too?
+      - name: UbuntuData
+        role: system-data
+        filesystem: ext4
+        type: 83,0FC63DAF-8483-4772-8E79-3D69D8477DE4
+        # XXX: make auto-grow to partition
+        size: 1G
