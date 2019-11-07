@@ -2,39 +2,41 @@ set default=0
 set timeout=3
 
 insmod part_gpt
+insmod ext2
+insmod regexp
 
-if [ -s $prefix/grubenv ]; then
+if [ -s "$prefix/grubenv" ]; then
   load_env
 fi
 
-# FIXME: find a better way? this ensures that someone instructed snapd
-#        to go into "install" mode it actually does that
-if [ "$snap_mode" = "install" ]; then
-    set default=1
+# allow customizing the menu entry via grubenv
+if [ -z "$snap_menuentry" ]; then
+    set snap_menuentry="Ubuntu Core 20"
 fi
 
-# ditto for recovery
-if [ "$snap_mode" = "recover_reboot" ]; then
-    set default=1
+search --no-floppy --set=seed_fs --label UbuntuSeed
+
+# find a recovery if none set in grubenv
+if [ -z "$snapd_recovery" ]; then
+    # globbing in grub does not sort
+    for label in ($seed_fs)/systems/*; do
+        regexp --set 1:label "/([0-9]*)\$" "$label"
+        if [ -z "$label" ]; then
+            continue
+        fi
+        # yes, you need to backslash that less-than
+        if [ -z "$snapd_recovery" -o "$label" \< "$snapd_recovery" ]; then
+            set snapd_recovery="$label"
+        fi
+    done
 fi
 
-menuentry "Normal mode" {
-          search --label "ubuntu-boot" --set=root
-          chainloader ($root)/efi/boot/grubx64.efi
+menuentry "$snapd_recovery" {
+    set cmdline="ro net.ifnames=0 init=/lib/systemd/systemd console=ttyS0 console=tty1 panic=-1"
+
+    linux ($seed_fs)/systems/$snapd_recovery/kernel.img $cmdline
+    initrd ($seed_fs)/systems/$snapd_recovery/initrd.img
+    # OR, if inird isn't extracted, something like
+    # loopback loop ($seed_fs)/systems/$snapd_recovery/snaps/kernel.snap
+    # initrd (loop)/initrd.img
 }
-
-# FIXME: can we avoid putting snap_recovery_system here? e.g. by just reading
-#        it from the bootloader env instead of kernel cmdline?
-set cmdline="snap_mode=$snap_mode snap_recovery_system=$snap_recovery_system ro net.ifnames=0 console=ttyS0 console=tty1 panic=-1"
-
-# `snap prepare-image` will setup an initial grubenv for recovery
-# - snap_recovery_system=<name>
-# - snap_recovery_kernel=<name>
-menuentry "Recovery mode" {
-    search --label ubuntu-seed --set=recovery_root
-    loopback loop ($recovery_root)/snaps/$snap_recovery_kernel
-    # FIXME: remove debug-shell
-    linux (loop)/kernel.img $cmdline systemd.debug-shell=1
-    initrd (loop)/initrd.img
-}
-
