@@ -7,6 +7,8 @@ addons:
     - name: snapcraft
       channel: stable
       classic: true
+    - name: core20
+      channel: edge
     - name: lxd
       channel: stable
 
