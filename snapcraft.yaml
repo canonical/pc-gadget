@@ -6,6 +6,7 @@ summary: PC gadget for generic devices
 description: |
     This gadget enables generic pc devices to work with Ubuntu Core
 confinement: strict
+grade: stable
 icon: icon.png
 
 parts:
