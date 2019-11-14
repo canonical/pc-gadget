@@ -1,14 +1,11 @@
 set default=0
 set timeout=3
 
-load_env
-
-set label="UbuntuSeed"
-search --no-floppy --set=seed_fs --label $label
+load_env --file /boot/grub/grubenv
 
 menuentry "$snap_menuentry" {
-    set cmdline="root=LABEL=$label snap_core=$snap_core snap_kernel=$snap_kernel ro net.ifnames=0 init=/lib/systemd/systemd console=ttyS0 console=tty1 panic=-1"
-    loopback loop ($seed_fs)/snaps/$snap_kernel
+    set cmdline="root=LABEL=UbuntuSeed snap_core=$snap_core snap_kernel=$snap_kernel ro net.ifnames=0 init=/lib/systemd/systemd console=ttyS0 console=tty1 panic=-1"
+    loopback loop /snaps/$snap_kernel
     linux (loop)/kernel.img $cmdline
     initrd (loop)/initrd.img
 }
