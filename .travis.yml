@@ -5,7 +5,7 @@ sudo: enabled
 addons:
   snaps:
     - name: snapcraft
-      channel: stable
+      channel: edge
       classic: true
     - name: core20
       channel: edge
