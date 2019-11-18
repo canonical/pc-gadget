@@ -11,4 +11,4 @@ addons:
       channel: edge
 
 script:
-  - sudo snapcraft snap --provider=host
+  - sudo snapcraft snap --provider=host --destructive-mode
