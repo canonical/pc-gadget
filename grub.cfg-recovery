@@ -1,11 +1,57 @@
 set default=0
 set timeout=3
 
+load_env --file /EFI/ubuntu/grubenv
 load_env --file /boot/grub/grubenv
 
-menuentry "$snap_menuentry" {
-    set cmdline="root=LABEL=UbuntuSeed snap_core=$snap_core snap_kernel=$snap_kernel ro net.ifnames=0 init=/lib/systemd/systemd console=ttyS0 console=tty1 panic=-1"
-    loopback loop /snaps/$snap_kernel
-    linux (loop)/kernel.img $cmdline
-    initrd (loop)/initrd.img
-}
+# if no default boot mode set, pick one
+if [ -z "$snapd_recovery_mode" ]; then
+    set snapd_recovery_mode=install
+fi
+
+if [ -n "$snapd_recovery" ]; then
+    default=$snapd_recovery_mode-$snapd_recovery
+fi
+
+# Not used currently...
+if [ -z "$snapd_try_status" ]; then
+    set snapd_try_status=try
+fi
+
+# standard cmdline params
+set standard_params="console=ttyS0 console=tty1 panic=-1"
+
+# globbing in grub does not sort
+for label in /systems/*; do
+    regexp --set 1:label "/([0-9]*)\$" "$label"
+    if [ -z "$label" ]; then
+        continue
+    fi
+    # yes, you need to backslash that less-than
+    if [ -z "$best" -o "$label" \< "$best" ]; then
+        set best="$label"
+    fi
+    # if grubenv did not pick mode-system, use best one
+    if [ -z "$snapd_recovery" ]; then
+        default=$snapd_recovery_mode-$best
+    fi
+    # Loadenv of the recovery system
+    # It can override cmdline args for example too
+    set snapd_recovery_kernel=
+    load_env --file /systems/$snapd_recovery/grubenv
+    if [ -z "$snapd_recovery_kernel" ]; then
+        set snapd_recovery_kernel=$snap_kernel
+    fi
+
+    # We could "source /systems/$snapd_recovery/grub.cfg" here as well
+    menuentry "Recover using $label" --hotkey=r --id=recover-$label $snapd_recovery_kernel recover $label {
+        loopback loop /snaps/$2
+        linux (loop)/kernel.img snapd_recovery_mode=$3 snapd_recovery=$4 $standard_params
+        initrd (loop)/initrd.img
+    }
+    menuentry "Install using $label" --hotkey=i --id=install-$label $snapd_recovery_kernel recover $label {
+        loopback loop /snaps/$2
+        linux (loop)/kernel.img snapd_recovery_mode=$3 snapd_recovery=$4 $standard_params
+        initrd (loop)/initrd.img
+    }
+done
