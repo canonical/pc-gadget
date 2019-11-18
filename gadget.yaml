@@ -14,7 +14,7 @@ volumes:
         offset-write: mbr+92
         content:
           - image: pc-core.img
-      - name: UbuntuSeed
+      - name: ubuntu-seed
         role: system-seed
         filesystem: vfat
         # UEFI will boot the ESP partition by default first
@@ -27,7 +27,7 @@ volumes:
             target: EFI/boot/bootx64.efi
           - source: grub.cfg-recovery
             target: EFI/ubuntu/grub.cfg
-      - name: UbuntuBoot
+      - name: ubuntu-boot
         role: system-boot
         filesystem: ext4
         type: 83,0FC63DAF-8483-4772-8E79-3D69D8477DE4
@@ -41,7 +41,7 @@ volumes:
           - source: grub.cfg-normal
             target: EFI/ubuntu/grub.cfg
       # XXX: should we define the  "ubuntu-save" partition here too?
-      - name: UbuntuData
+      - name: ubuntu-data
         role: system-data
         filesystem: ext4
         type: 83,0FC63DAF-8483-4772-8E79-3D69D8477DE4
