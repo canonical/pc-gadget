@@ -55,3 +55,7 @@ for label in /systems/*; do
         initrd (loop)/initrd.img
     }
 done
+
+menuentry 'System setup' --hotkey=f 'uefi-firmware' {
+    fwsetup
+}
