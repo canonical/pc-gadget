@@ -38,7 +38,7 @@ for label in /systems/*; do
     # Loadenv of the recovery system
     # It can override cmdline args for example too
     set snapd_recovery_kernel=
-    load_env --file /systems/$snapd_recovery/grubenv
+    load_env --file /systems/$label/grubenv
     if [ -z "$snapd_recovery_kernel" ]; then
         set snapd_recovery_kernel=$snap_kernel
     fi
