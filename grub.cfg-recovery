@@ -9,8 +9,8 @@ if [ -z "$snapd_recovery_mode" ]; then
     set snapd_recovery_mode=install
 fi
 
-if [ -n "$snapd_recovery" ]; then
-    default=$snapd_recovery_mode-$snapd_recovery
+if [ -n "$snapd_recovery_system" ]; then
+    default=$snapd_recovery_mode-$snapd_recovery_system
 fi
 
 # Not used currently...
@@ -46,7 +46,7 @@ for label in /systems/*; do
     # We could "source /systems/$snapd_recovery/grub.cfg" here as well
     menuentry "Recover using $label" --hotkey=r --id=recover-$label $snapd_recovery_kernel recover $label {
         loopback loop $2
-        linux (loop)/kernel.img snapd_recovery_mode=$3 snapd_recovery=$4 $standard_params
+        linux (loop)/kernel.img snapd_recovery_mode=$3 snapd_recovery_system=$4 $standard_params
         if [ -e (loop)/ubuntu-core-initramfs.img ]; then
             initrd (loop)/ubuntu-core-initramfs.img
         else
@@ -55,7 +55,7 @@ for label in /systems/*; do
     }
     menuentry "Install using $label" --hotkey=i --id=install-$label $snapd_recovery_kernel recover $label {
         loopback loop $2
-        linux (loop)/kernel.img snapd_recovery_mode=$3 snapd_recovery=$4 $standard_params
+        linux (loop)/kernel.img snapd_recovery_mode=$3 snapd_recovery_system=$4 $standard_params
         if [ -e (loop)/ubuntu-core-initramfs.img ]; then
             initrd (loop)/ubuntu-core-initramfs.img
         else
