@@ -53,7 +53,7 @@ for label in /systems/*; do
             initrd (loop)/initrd.img
         fi
     }
-    menuentry "Install using $label" --hotkey=i --id=install-$label $snapd_recovery_kernel recover $label {
+    menuentry "Install using $label" --hotkey=i --id=install-$label $snapd_recovery_kernel install $label {
         loopback loop $2
         linux (loop)/kernel.img snapd_recovery_mode=$3 snapd_recovery_system=$4 $standard_params
         if [ -e (loop)/ubuntu-core-initramfs.img ]; then
