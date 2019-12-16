@@ -15,7 +15,7 @@ elif [ -n "$snapd_recovery_system" ]; then
 fi
 
 # standard cmdline params
-set standard_params="console=ttyS0 console=tty1 panic=-1"
+set standard_params="console=ttyS0 console=tty1 panic=-1 systemd.gpt_auto=0"
 
 search --no-floppy --set=boot_fs --label ubuntu-boot
 
@@ -51,21 +51,11 @@ for label in /systems/*; do
     # We could "source /systems/$snapd_recovery/grub.cfg" here as well
     menuentry "Recover using $label" --hotkey=r --id=recover-$label $snapd_recovery_kernel recover $label {
         loopback loop $2
-        linux (loop)/kernel.img snapd_recovery_mode=$3 snapd_recovery_system=$4 $standard_params
-        if [ -e (loop)/ubuntu-core-initramfs.img ]; then
-            initrd (loop)/ubuntu-core-initramfs.img
-        else
-            initrd (loop)/initrd.img
-        fi
+        chainloader (loop)/kernel.efi snapd_recovery_mode=$3 snapd_recovery_system=$4 $standard_params
     }
     menuentry "Install using $label" --hotkey=i --id=install-$label $snapd_recovery_kernel install $label {
         loopback loop $2
-        linux (loop)/kernel.img snapd_recovery_mode=$3 snapd_recovery_system=$4 $standard_params
-        if [ -e (loop)/ubuntu-core-initramfs.img ]; then
-            initrd (loop)/ubuntu-core-initramfs.img
-        else
-            initrd (loop)/initrd.img
-        fi
+        chainloader (loop)/kernel.efi snapd_recovery_mode=$3 snapd_recovery_system=$4 $standard_params
     }
 done
 
