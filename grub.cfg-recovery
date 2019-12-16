@@ -21,6 +21,16 @@ fi
 # standard cmdline params
 set standard_params="console=ttyS0 console=tty1 panic=-1"
 
+if [ "$snapd_recovery_mode" = "run" ]; then
+    default="Run"
+    # XXX: we want to just run in this mode eventually
+    #      instead of displaying a menu here
+    menuentry "Run" {
+        # XXX: use label instead of hardcoding gpt3
+        chainloader (hd0,gpt3)/EFI/boot/grubx64.efi
+    }
+fi
+
 # globbing in grub does not sort
 for label in /systems/*; do
     regexp --set 1:label "/([0-9]*)\$" "$label"
