@@ -2,32 +2,27 @@ set default=0
 set timeout=3
 
 load_env --file /EFI/ubuntu/grubenv
-load_env --file /boot/grub/grubenv
 
 # if no default boot mode set, pick one
 if [ -z "$snapd_recovery_mode" ]; then
     set snapd_recovery_mode=install
 fi
 
-if [ -n "$snapd_recovery_system" ]; then
+if [ "$snapd_recovery_mode" = "run" ]; then
+    default="run"
+elif [ -n "$snapd_recovery_system" ]; then
     default=$snapd_recovery_mode-$snapd_recovery_system
-fi
-
-# Not used currently...
-if [ -z "$snapd_try_status" ]; then
-    set snapd_try_status=try
 fi
 
 # standard cmdline params
 set standard_params="console=ttyS0 console=tty1 panic=-1"
 
-if [ "$snapd_recovery_mode" = "run" ]; then
-    default="Run"
-    # XXX: we want to just run in this mode eventually
-    #      instead of displaying a menu here
-    menuentry "Run" {
-        # XXX: use label instead of hardcoding gpt3
-        chainloader (hd0,gpt3)/EFI/boot/grubx64.efi
+search --no-floppy --set=boot_fs --label ubuntu-boot
+
+if [ -n "$boot_fs" ]; then
+    default="run"
+    menuentry "Continue to run mode" --hotkey=n --id=run {
+        chainloader ($boot_fs)/EFI/boot/grubx64.efi
     }
 fi
 
