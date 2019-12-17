@@ -32,7 +32,7 @@ elif [ "$snap_mode" = "trying" ]; then
 fi
 
 set label="ubuntu-data"
-set cmdline="root=LABEL=$label snap_core=$snap_core snap_kernel=$snap_kernel ro net.ifnames=0 init=/lib/systemd/systemd console=ttyS0 console=tty1 panic=-1 snapd_recovery_mode=run"
+set cmdline="snap_core=$snap_core snap_kernel=$snap_kernel ro net.ifnames=0 init=/lib/systemd/systemd console=ttyS0 console=tty1 panic=-1 snapd_recovery_mode=run"
 
 menuentry "$snap_menuentry" {
     search --label $label --set=writable
