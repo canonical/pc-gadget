@@ -35,7 +35,8 @@ set label="ubuntu-data"
 set cmdline="root=LABEL=$label snap_core=$snap_core snap_kernel=$snap_kernel ro net.ifnames=0 init=/lib/systemd/systemd console=ttyS0 console=tty1 panic=-1 snapd_recovery_mode=run"
 
 menuentry "$snap_menuentry" {
-    search --label ubuntu-boot --set=ubuntu_boot
-    linux ($ubuntu_boot)/kernel.img $cmdline systemd.debug-shell=1
-    initrd ($ubuntu_boot)/initrd.img
+    search --label $label --set=writable
+    loopback loop ($writable)/system-data/var/lib/snapd/snaps/$snap_kernel
+    linux (loop)/kernel.img $cmdline
+    initrd (loop)/initrd.img
 }
