@@ -1,32 +1,38 @@
 set default=0
 set timeout=3
 
-if [ -s $prefix/grubenv ]; then
-  load_env
-fi
+# load only kernel_status from the bootenv
+load_env --file /EFI/ubuntu/grubenv kernel_status
 
-if [ "$snap_mode" = "try" ]; then
-    # a new core or kernel got installed
-    set snap_mode="trying"
-    save_env snap_mode
+set cmdline="console=ttyS0 console=tty1 panic=-1 systemd.gpt_auto=0 snapd_recovery_mode=run"
 
-    if [ x"$snap_try_core" != x"" ]; then
-        set snap_core="$snap_try_core"
-    fi
-    if [ x"$snap_try_kernel" != x"" ]; then
-        set snap_kernel="$snap_try_kernel"
-    fi
-elif [ "$snap_mode" = "trying" ]; then
+if [ "$kernel_status" = "try" ]; then
+    # a new kernel got installed
+    set kernel_status="trying"
+    save_env kernel_status
+
+    # try to boot with try-kernel.img
+    menuentry "Run Ubuntu Core 20" {
+        search --label ubuntu-boot --set=ubuntu_boot
+        chainloader ($ubuntu_boot)/try-kernel.efi $cmdline
+    }
+elif [ "$kernel_status" = "trying" ]; then
     # nothing cleared the "trying snap" so the boot failed
     # we clear the mode and boot normally
-    set snap_mode=""
-    save_env snap_mode
+    set kernel_status=""
+    save_env kernel_status
+elif [ x"$kernel_status" != x"" ]; then
+    # ERROR invalid kernel_status state, reset to empty
+    echo "invalid kernel_status!!!"
+    echo "resetting to empty"
+    set kernel_status=""
+    save_env kernel_status
 fi
 
-set cmdline="snap_core=$snap_core snap_kernel=$snap_kernel console=ttyS0 console=tty1 panic=-1 systemd.gpt_auto=0 snapd_recovery_mode=run"
-
-menuentry "Run Ubuntu Core 20" {
-    search --label ubuntu-data --set=writable
-    loopback loop ($writable)/system-data/var/lib/snapd/snaps/$snap_kernel
-    chainloader (loop)/kernel.efi $cmdline
-}
+# boot with the normal kernel.img and initrd.img
+if [ x"$kernel_status" = x"" ]; then
+    menuentry "Run Ubuntu Core 20" {
+        search --label ubuntu-boot --set=ubuntu_boot
+        chainloader ($ubuntu_boot)/kernel.efi $cmdline
+    }
+fi
