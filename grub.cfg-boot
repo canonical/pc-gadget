@@ -6,22 +6,21 @@ load_env --file /EFI/ubuntu/grubenv kernel_status
 
 set cmdline="console=ttyS0 console=tty1 panic=-1 systemd.gpt_auto=0 snapd_recovery_mode=run"
 
+set kernel=kernel.efi
+
 if [ "$kernel_status" = "try" ]; then
     # a new kernel got installed
     set kernel_status="trying"
     save_env kernel_status
 
-    # try to boot with try-kernel.img
-    menuentry "Run Ubuntu Core 20" {
-        search --label ubuntu-boot --set=ubuntu_boot
-        chainloader ($ubuntu_boot)/try-kernel.efi $cmdline
-    }
+    # use try-kernel.efi
+    set kernel=try-kernel.efi
 elif [ "$kernel_status" = "trying" ]; then
     # nothing cleared the "trying snap" so the boot failed
     # we clear the mode and boot normally
     set kernel_status=""
     save_env kernel_status
-elif [ x"$kernel_status" != x"" ]; then
+elif [ -n "$kernel_status" ]; then
     # ERROR invalid kernel_status state, reset to empty
     echo "invalid kernel_status!!!"
     echo "resetting to empty"
@@ -30,9 +29,7 @@ elif [ x"$kernel_status" != x"" ]; then
 fi
 
 # boot with the normal kernel.img and initrd.img
-if [ x"$kernel_status" = x"" ]; then
-    menuentry "Run Ubuntu Core 20" {
-        search --label ubuntu-boot --set=ubuntu_boot
-        chainloader ($ubuntu_boot)/kernel.efi $cmdline
-    }
-fi
+menuentry "Run Ubuntu Core 20" {
+    search --label ubuntu-boot --set=ubuntu_boot
+    chainloader ($ubuntu_boot)/$kernel $cmdline
+}
