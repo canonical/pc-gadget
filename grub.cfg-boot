@@ -2,7 +2,7 @@ set default=0
 set timeout=3
 
 # load only kernel_status from the bootenv
-load_env --file /EFI/ubuntu/grubenv kernel_status
+load_env --file /EFI/ubuntu/grubenv kernel_status snap_kernel
 
 set cmdline="console=ttyS0 console=tty1 panic=-1 systemd.gpt_auto=0 snapd_recovery_mode=run"
 
@@ -28,8 +28,16 @@ elif [ -n "$kernel_status" ]; then
     save_env kernel_status
 fi
 
-# boot with the normal kernel.img and initrd.img
+search --label ubuntu-boot --set=ubuntu_boot
+
+if [ -e ($ubuntu_boot)/$kernel ]; then
 menuentry "Run Ubuntu Core 20" {
-    search --label ubuntu-boot --set=ubuntu_boot
     chainloader ($ubuntu_boot)/$kernel $cmdline
 }
+else
+menuentry "Run Ubuntu Core 20" {
+    search --label ubuntu-data --set=writable
+    loopback loop ($writable)/system-data/var/lib/snapd/snaps/$snap_kernel
+    chainloader (loop)/kernel.efi $cmdline
+}
+fi
