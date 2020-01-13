@@ -16,6 +16,7 @@ parts:
       - grub-efi-amd64-signed
       - grub-pc-bin
       - shim-signed
+      - sbsigntool
     prime: [ -* ]
   grub:
     source: .
