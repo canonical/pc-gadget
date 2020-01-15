@@ -30,12 +30,15 @@ fi
 
 search --label ubuntu-boot --set=ubuntu_boot
 
-if [ -e ($ubuntu_boot)/$kernel ]; then
+if [ -e $prefix/$kernel ]; then
 menuentry "Run Ubuntu Core 20" {
-    chainloader ($ubuntu_boot)/$kernel $cmdline
+    # use $prefix because the symlink manipulation at runtime for kernel snap 
+    # upgrades, etc. should only need the /boot/grub/ directory, not the 
+    # /EFI/ubuntu/ directory
+    chainloader $prefix/$kernel $cmdline
 }
 else
-menuentry "Run Ubuntu Core 20" {
+menuentry "Run Ubuntu Core 20 compatibility mode" {
     search --label ubuntu-data --set=writable
     loopback loop ($writable)/system-data/var/lib/snapd/snaps/$snap_kernel
     chainloader (loop)/kernel.efi $cmdline
