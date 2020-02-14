@@ -2,7 +2,7 @@ set default=0
 set timeout=3
 
 # load only kernel_status from the bootenv
-load_env --file /EFI/ubuntu/grubenv kernel_status snap_kernel
+load_env --file /EFI/ubuntu/grubenv kernel_status
 
 set cmdline="console=ttyS0 console=tty1 panic=-1 systemd.gpt_auto=0 init=/sbin/init snapd_recovery_mode=run"
 
@@ -28,8 +28,6 @@ elif [ -n "$kernel_status" ]; then
     save_env kernel_status
 fi
 
-search --label ubuntu-boot --set=ubuntu_boot
-
 if [ -e $prefix/$kernel ]; then
 menuentry "Run Ubuntu Core 20" {
     # use $prefix because the symlink manipulation at runtime for kernel snap 
@@ -38,9 +36,6 @@ menuentry "Run Ubuntu Core 20" {
     chainloader $prefix/$kernel $cmdline
 }
 else
-menuentry "Run Ubuntu Core 20 compatibility mode" {
-    search --label ubuntu-data --set=writable
-    loopback loop ($writable)/system-data/var/lib/snapd/snaps/$snap_kernel
-    chainloader (loop)/kernel.efi $cmdline
-}
+    # nothing to boot :-/
+    echo "missing kernel at $prefix/$kernel!"
 fi
