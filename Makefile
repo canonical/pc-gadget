@@ -44,7 +44,7 @@ GRUB_MODULES = \
 	part_gpt \
 	png \
 	reboot \
-	regex \
+	regexp \
 	search \
 	search_fs_uuid \
 	search_fs_file \
