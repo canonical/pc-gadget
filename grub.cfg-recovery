@@ -1,7 +1,7 @@
 set default=0
 set timeout=3
 
-load_env --file /EFI/ubuntu/grubenv
+load_env --file /EFI/ubuntu/grubenv snapd_recovery_mode snapd_recovery_system
 
 # if no default boot mode set, pick one
 if [ -z "$snapd_recovery_mode" ]; then
