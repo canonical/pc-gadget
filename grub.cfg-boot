@@ -4,7 +4,7 @@ set timeout=3
 # load only kernel_status from the bootenv
 load_env --file /EFI/ubuntu/grubenv kernel_status
 
-set cmdline="console=ttyS0 console=tty1 panic=-1 systemd.gpt_auto=0 init=/sbin/init snapd_recovery_mode=run"
+set cmdline="console=ttyS0 console=tty1 panic=-1 systemd.gpt_auto=0 rd.systemd.unit=basic.target snapd_recovery_mode=run"
 
 set kernel=kernel.efi
 

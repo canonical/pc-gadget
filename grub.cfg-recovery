@@ -15,7 +15,7 @@ elif [ -n "$snapd_recovery_system" ]; then
 fi
 
 # standard cmdline params
-set standard_params="console=ttyS0 console=tty1 panic=-1 systemd.gpt_auto=0 init=/sbin/init"
+set standard_params="console=ttyS0 console=tty1 panic=-1 systemd.gpt_auto=0 rd.systemd.unit=basic.target"
 
 search --no-floppy --set=boot_fs --label ubuntu-boot
 
