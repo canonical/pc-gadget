@@ -40,13 +40,8 @@ for label in /systems/*; do
     if [ -z "$snapd_recovery" ]; then
         default=$snapd_recovery_mode-$best
     fi
-    # Loadenv of the recovery system
-    # It can override cmdline args for example too
     set snapd_recovery_kernel=
-    load_env --file /systems/$label/grubenv
-    if [ -z "$snapd_recovery_kernel" ]; then
-        set snapd_recovery_kernel=$snap_kernel
-    fi
+    load_env --file /systems/$label/grubenv snapd_recovery_kernel
 
     # We could "source /systems/$snapd_recovery/grub.cfg" here as well
     menuentry "Recover using $label" --hotkey=r --id=recover-$label $snapd_recovery_kernel recover $label {
