@@ -1,4 +1,4 @@
-language: python
+language: minimal
 os: linux
 dist: bionic
 sudo: enabled
@@ -11,4 +11,5 @@ addons:
       channel: edge
 
 script:
+  - sudo apt update
   - sudo snapcraft snap --provider=host --destructive-mode
