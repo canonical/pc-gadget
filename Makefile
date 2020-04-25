@@ -67,9 +67,9 @@ all:
 	cp $(SNAPCRAFT_STAGE)/usr/lib/shim/shimx64.efi.signed shim.efi.signed
 	cp $(SNAPCRAFT_STAGE)/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed grubx64.efi
 	sbattach --remove shim.efi.signed
-	sbattach --remove grubx64.efi
+	#sbattach --remove grubx64.efi
 	sbsign --key snakeoil/PkKek-1-snakeoil.key --cert snakeoil/PkKek-1-snakeoil.pem --output shim.efi.signed shim.efi.signed
-	sbsign --key snakeoil/PkKek-1-snakeoil.key --cert snakeoil/PkKek-1-snakeoil.pem --output grubx64.efi grubx64.efi
+	#sbsign --key snakeoil/PkKek-1-snakeoil.key --cert snakeoil/PkKek-1-snakeoil.pem --output grubx64.efi grubx64.efi
 
 
 install:
