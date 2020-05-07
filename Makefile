@@ -66,11 +66,6 @@ all:
 	/bin/echo -n -e '\x01\x08\x00\x00' | dd of=pc-core.img seek=500 bs=1 conv=notrunc
 	cp $(SNAPCRAFT_STAGE)/usr/lib/shim/shimx64.efi.signed shim.efi.signed
 	cp $(SNAPCRAFT_STAGE)/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed grubx64.efi
-	sbattach --remove shim.efi.signed
-	#sbattach --remove grubx64.efi
-	sbsign --key snakeoil/PkKek-1-snakeoil.key --cert snakeoil/PkKek-1-snakeoil.pem --output shim.efi.signed shim.efi.signed
-	#sbsign --key snakeoil/PkKek-1-snakeoil.key --cert snakeoil/PkKek-1-snakeoil.pem --output grubx64.efi grubx64.efi
-
 
 install:
 	install -m 644 pc-boot.img pc-core.img shim.efi.signed grubx64.efi $(DESTDIR)/
