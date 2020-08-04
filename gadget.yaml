@@ -46,6 +46,8 @@ volumes:
             target: EFI/boot/grubx64.efi
           - source: shim.efi.signed
             target: EFI/boot/bootx64.efi
+          - source: shim.efi.dualsigned
+            target: EFI/boot/bootx64-dualsigned.efi
           - source: grub.conf
             target: EFI/ubuntu/grub.cfg
       # XXX: should we define the  "ubuntu-save" partition here too?
