@@ -64,10 +64,9 @@ all:
 	# BIOS boot partition must be defined with an absolute offset.  The
 	# particular value here is 2049, or 0x01 0x08 0x00 0x00 in little-endian.
 	/bin/echo -n -e '\x01\x08\x00\x00' | dd of=pc-core.img seek=500 bs=1 conv=notrunc
-	cp $(SNAPCRAFT_STAGE)/usr/lib/shim/shimx64.efi.signed shim.efi.signed
-	cp $(SNAPCRAFT_STAGE)/usr/lib/shim/shimx64.efi.dualsigned shim.efi.dualsigned
+	cp $(SNAPCRAFT_STAGE)/usr/lib/shim/shimx64.efi.dualsigned shim.efi.signed
 	cp $(SNAPCRAFT_STAGE)/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed grubx64.efi
 
 install:
-	install -m 644 pc-boot.img pc-core.img shim.efi.signed shim.efi.dualsigned grubx64.efi $(DESTDIR)/
+	install -m 644 pc-boot.img pc-core.img shim.efi.signed grubx64.efi $(DESTDIR)/
 	install -m 644 grub-recovery.conf grub.conf $(DESTDIR)/
