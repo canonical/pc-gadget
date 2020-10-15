@@ -69,3 +69,4 @@ all:
 
 install:
 	install -m 644 pc-boot.img pc-core.img shim.efi.signed grubx64.efi $(DESTDIR)/
+	install -m 644 grub-recovery.conf grub.conf $(DESTDIR)/
