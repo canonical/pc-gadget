@@ -12,6 +12,7 @@ icon: icon.png
 parts:
   grub-prepare:
     plugin: nil
+    build-snaps: [snapd/latest/edge]
     stage-packages:
       - grub-efi-amd64-signed
       - grub-pc-bin
