@@ -69,11 +69,17 @@ all:
 	# And yet people try to rebuild this gadget snap
 	pull-lp-debs -a amd64 -D ppa --ppa ppa:canonical-foundations/uc20-staging-ppa shim-signed focal
 	dpkg-deb -x shim-signed_*.deb shim/
+	pull-lp-debs -a amd64 -D ppa --ppa ppa:canonical-foundations/uc20-staging-ppa shim focal
+	dpkg-deb -x shim_*.deb shim/
 	pull-lp-debs -a amd64 -D ppa --ppa ppa:canonical-foundations/uc20-staging-ppa grub-efi-amd64-signed focal || wget https://launchpad.net/~canonical-signing/+archive/ubuntu/uc20/+build/19903679/+files/grub-efi-amd64-signed_1.142.5+uc20.1+2.04-1ubuntu26.3_amd64.deb
 	dpkg-deb -x grub-efi-amd64-signed_*.deb grub/
 	cp shim/usr/lib/shim/shimx64.efi.dualsigned shim.efi.signed
+	cp shim/usr/lib/shim/fbx64.efi .
+	cp shim/usr/lib/shim/mmx64.efi .
+	cp shim/usr/lib/shim/BOOTX64.CSV .
 	cp grub/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed grubx64.efi
 
 install:
 	install -m 644 pc-boot.img pc-core.img shim.efi.signed grubx64.efi $(DESTDIR)/
+	install -m 644 fbx64.efi mmx64.efi BOOTX64.CSV $(DESTDIR)/
 	install -m 644 grub.conf $(DESTDIR)/
