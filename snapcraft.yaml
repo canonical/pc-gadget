@@ -13,6 +13,9 @@ parts:
   grub-prepare:
     plugin: nil
     build-snaps: [snapd/latest/edge]
+    build-packages:
+      - ubuntu-dev-tools
+      - wget
     stage-packages:
       - grub-efi-amd64-signed
       - grub-pc-bin
