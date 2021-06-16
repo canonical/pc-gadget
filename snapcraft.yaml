@@ -23,6 +23,9 @@ parts:
     source: .
     build-packages:
       - grub-common
+    override-build: |
+      snapcraftctl build
+      cp cmdline.extra $SNAPCRAFT_PART_INSTALL/
     plugin: make
     after: [grub-prepare]
 
