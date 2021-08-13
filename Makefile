@@ -82,7 +82,9 @@ define stage_package
 	dpkg-deb --extract $$(ls $(STAGEDIR)/tmp/$(1)*.deb | tail -1) $(STAGEDIR)
 endef
 
-all:
+all: boot install
+
+boot:
 	# Check if we're running under snapcraft. If not, we need to 'stage'
 	# some packages by ourselves.
 ifndef SNAPCRAFT_PROJECT_NAME
@@ -100,7 +102,6 @@ endif
 	/bin/echo -n -e '\x01\x08\x00\x00' | dd of=pc-core.img seek=500 bs=1 conv=notrunc
 	cp $(STAGEDIR)/usr/lib/shim/shimx64.efi.signed shim.efi.signed
 	cp $(STAGEDIR)/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed grubx64.efi
-
 
 install:
 	mkdir -p $(DESTDIR)
