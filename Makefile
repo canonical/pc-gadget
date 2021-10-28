@@ -106,7 +106,7 @@ endif
 install:
 	mkdir -p $(DESTDIR)
 	install -m 644 pc-boot.img pc-core.img shim.efi.signed grubx64.efi $(DESTDIR)/
-	install -m 644 grub.conf grub-cpc.cfg $(DESTDIR)/
+	install -m 644 grub.conf grub.cfg $(DESTDIR)/
 	# For classic builds we also need to prime the gadget.yaml
 	mkdir -p $(DESTDIR)/meta
 	cp gadget.yaml $(DESTDIR)/meta/
