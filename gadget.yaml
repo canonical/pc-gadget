@@ -29,9 +29,17 @@ volumes:
           edition: 2
         content:
           - source: grubx64.efi
-            target: EFI/boot/grubx64.efi
+            target: EFI/ubuntu/grubx64.efi
           - source: shim.efi.signed
-            target: EFI/boot/bootx64.efi
+            target: EFI/BOOT/BOOTX64.efi
+          - source: fbx64.efi
+            target: EFI/BOOT/fbx64.efi
+          - source: mmx64.efi
+            target: EFI/BOOT/mmx64.efi
+          - source: BOOTX64.CSV
+            target: EFI/ubuntu/BOOTX64.CSV
+          - source: shim.efi.signed
+            target: EFI/ubuntu/shimx64.efi
       - name: ubuntu-boot
         role: system-boot
         filesystem: ext4
