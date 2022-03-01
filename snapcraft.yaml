@@ -1,5 +1,5 @@
 name: pc
-version: '22-0.2'
+version: '22-0.3'
 type: gadget
 base: core22
 summary: PC gadget for generic devices
@@ -10,19 +10,11 @@ grade: devel
 icon: icon.png
 
 parts:
-  grub-prepare:
-    plugin: nil
-    build-snaps: [snapd/latest/edge]
-    stage-packages:
-      - grub-efi-amd64-signed
-      - grub-pc-bin
-      - shim-signed
-      - sbsigntool
-    prime: [ -* ]
   grub:
     source: .
     build-packages:
+      - ubuntu-dev-tools
+      - grub-pc-bin
       - grub-common
     plugin: make
-    after: [grub-prepare]
 
