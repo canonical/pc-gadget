@@ -67,11 +67,9 @@ all:
 	# We must pull in dualsigned shim & grub with UC20 signature
 	# Do it by hand, as snapcraft doesn't have support for PPA archives yet
 	# And yet people try to rebuild this gadget snap
-	pull-lp-debs -a amd64 -D ppa --ppa ppa:canonical-foundations/uc20-staging-ppa shim-signed focal
+	pull-lp-debs -a amd64 -D ppa --ppa ppa:canonical-foundations/uc20-staging-ppa shim-signed jammy
 	dpkg-deb -x shim-signed_*.deb shim/
-	pull-lp-debs -a amd64 -D ppa --ppa ppa:canonical-foundations/uc20-staging-ppa shim focal
-	dpkg-deb -x shim_*.deb shim/
-	pull-lp-debs -a amd64 -D ppa --ppa ppa:canonical-foundations/uc20-staging-ppa grub2-signed focal
+	pull-lp-debs -a amd64 -D ppa --ppa ppa:canonical-foundations/uc20-staging-ppa grub2-signed jammy
 	dpkg-deb -x grub-efi-amd64-signed_*.deb grub/
 	cp shim/usr/lib/shim/shimx64.efi.dualsigned shim.efi.signed
 	cp grub/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed grubx64.efi
