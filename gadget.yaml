@@ -1,24 +1,9 @@
 volumes:
   pc:
     # bootloader configuration is shipped and managed by snapd
+    schema: gpt
     bootloader: grub
     structure:
-      - name: mbr
-        type: mbr
-        size: 440
-        update:
-          edition: 1
-        content:
-          - image: pc-boot.img
-      - name: BIOS Boot
-        type: DA,21686148-6449-6E6F-744E-656564454649
-        size: 1M
-        offset: 1M
-        offset-write: mbr+92
-        update:
-          edition: 2
-        content:
-          - image: pc-core.img
       - name: ubuntu-seed
         role: system-seed
         filesystem: vfat
@@ -28,10 +13,10 @@ volumes:
         update:
           edition: 2
         content:
-          - source: grubx64.efi
-            target: EFI/boot/grubx64.efi
+          - source: grubaa64.efi
+            target: EFI/boot/grubaa64.efi
           - source: shim.efi.signed
-            target: EFI/boot/bootx64.efi
+            target: EFI/boot/bootaa64.efi
       - name: ubuntu-boot
         role: system-boot
         filesystem: ext4
@@ -41,10 +26,10 @@ volumes:
         update:
           edition: 1
         content:
-          - source: grubx64.efi
-            target: EFI/boot/grubx64.efi
+          - source: grubaa64.efi
+            target: EFI/boot/grubaa64.efi
           - source: shim.efi.signed
-            target: EFI/boot/bootx64.efi
+            target: EFI/boot/bootaa64.efi
       - name: ubuntu-save
         role: system-save
         filesystem: ext4
