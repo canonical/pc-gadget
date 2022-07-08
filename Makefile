@@ -77,5 +77,6 @@ all:
 install:
 	install -m 644 pc-boot.img pc-core.img shim.efi.signed grubx64.efi $(DESTDIR)/
 	install -m 644 grub.conf $(DESTDIR)/
+	install -m 644 cmdline.extra $(DESTDIR)/
 	install -d $(DESTDIR)/meta
 	install -m 644 gadget.yaml $(DESTDIR)/meta/
