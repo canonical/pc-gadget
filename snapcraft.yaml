@@ -38,12 +38,12 @@ parts:
     override-build: |
       set -x
       # Make sure we have signatures from the UC certificates
-      sbverify --list "$SNAPCRAFT_PART_INSTALL"/usr/lib/shim/shimx64.efi.dualsigned |
+      sbverify --list "$CRAFT_PART_INSTALL"/usr/lib/shim/shimx64.efi.dualsigned |
           grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
-      sbverify --list "$SNAPCRAFT_PART_INSTALL"/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed |
+      sbverify --list "$CRAFT_PART_INSTALL"/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed |
           grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
 
-      mbr_img="$SNAPCRAFT_PART_INSTALL"/pc-boot.img
+      mbr_img="$CRAFT_PART_INSTALL"/pc-boot.img
       dd if=/usr/lib/grub/i386-pc/boot.img of="$mbr_img" bs=440 count=1
       printf '\x90\x90' | dd of="$mbr_img" seek=102 bs=1 conv=notrunc
       GRUB_MODULES="\
@@ -84,7 +84,7 @@ parts:
         test \
         true \
         video"
-      bios_img="$SNAPCRAFT_PART_INSTALL"/pc-core.img
+      bios_img="$CRAFT_PART_INSTALL"/pc-core.img
       # shellcheck disable=SC2086
       grub-mkimage -O i386-pc -o "$bios_img" -p '(,gpt2)/EFI/ubuntu' $GRUB_MODULES
       # The first sector of the core image requires an absolute pointer to the
@@ -92,7 +92,7 @@ parts:
       # BIOS boot partition must be defined with an absolute offset.  The
       # particular value here is 2049, or 0x01 0x08 0x00 0x00 in little-endian.
       printf '\x01\x08\x00\x00' | dd of="$bios_img" seek=500 bs=1 conv=notrunc
-      install -m 644 /dev/null "$SNAPCRAFT_PART_INSTALL"/grub.conf
+      install -m 644 /dev/null "$CRAFT_PART_INSTALL"/grub.conf
     organize:
       usr/lib/shim/shimx64.efi.dualsigned: shim.efi.signed
       usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed: grubx64.efi
