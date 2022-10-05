@@ -1,0 +1,19 @@
+name: xinyi-pc-classic
+adopt-info: pc
+type: gadget
+base: core22
+summary: Xinyi PC Classic gadget
+description: |
+    This gadget enables Xinyi PC Classic systems
+confinement: strict
+grade: stable
+
+parts:
+  pc:
+    plugin: nil
+    override-pull: |
+      craftctl set version="$(snap info pc | yq '.channels.22/edge | split(" ").0')"
+    build-snaps:
+      - yq
+    stage-snaps:
+      - pc/22/edge
