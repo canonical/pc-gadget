@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -eux
+
+exec >> $SNAP_COMMON/prepare-device-hook.log 2>&1
+
+# TODO: define your model's API key here
+# See https://ubuntu.com/core/services/guide/serial-vault-overview
+# for instructions on how to generate an API key
+# DO NOT check this API key into a publicly accessible VCS
+MODEL_APIKEY=""
+
+if [ -n "$MODEL_APIKEY" ] ; then
+    snapctl set registration.proposed-serial="\"$($SNAP/usr/bin/uuidgen)\""
+    snapctl set device-service.url="https://serial-vault-partners.canonical.com/v1/"
+    snapctl set device-service.headers="{\"api-key\": \"$MODEL_APIKEY\"}"
+fi
