@@ -17,4 +17,8 @@ parts:
       - grub-pc-bin
       - grub-common
     plugin: make
+  uuidgen:
+    plugin: nil
+    stage-packages: [ uuid-runtime ]
+    stage: [ usr/bin/uuidgen, usr/share/doc/uuid-runtime/copyright ]
 
