@@ -12,8 +12,6 @@ parts:
   pc:
     plugin: nil
     override-pull: |
-      craftctl set version="$(snap info pc | yq '.channels.22/edge | split(" ").0')"
-    build-snaps:
-      - yq
+      craftctl set version="$(snap info pc | sed -n 's|^  22/edge: *\(22-[0-9.]*\) *202.-.*|\1|p')"
     stage-snaps:
       - pc/22/edge
