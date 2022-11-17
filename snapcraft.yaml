@@ -17,8 +17,13 @@ parts:
       - grub-pc-bin
       - grub-common
     plugin: make
-  uuidgen:
-    plugin: nil
-    stage-packages: [ uuid-runtime ]
-    stage: [ usr/bin/uuidgen, usr/share/doc/uuid-runtime/copyright ]
 
+hooks:
+  prepare-device:
+    environment:
+      # If you are forking and building your own gadget:
+      # define your model's API key here
+      # See https://ubuntu.com/core/services/guide/serial-vault-overview
+      # for instructions on how to generate an API key
+      # DO NOT check this API key into a publicly accessible VCS
+      MODEL_APIKEY: ""
