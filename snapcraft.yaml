@@ -15,3 +15,5 @@ parts:
       craftctl set version="$(snap info pc | sed -n 's|^  22/edge: *\(22-[0-9.]*\) *202.-.*|\1|p')"
     stage-snaps:
       - pc/22/edge
+    stage:
+      - -pc-boot.img
