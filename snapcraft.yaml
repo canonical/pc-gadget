@@ -17,3 +17,6 @@ parts:
       - pc/22/edge
     stage:
       - -pc-boot.img
+  cmdline:
+    plugin: dump
+    source: dump
