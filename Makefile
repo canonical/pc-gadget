@@ -4,6 +4,7 @@ else
 STAGEDIR ?= "$(CURDIR)/stage"
 endif
 DESTDIR ?= "$(CURDIR)/install"
+SERIES ?= "jammy"
 ARCH ?= $(shell dpkg --print-architecture)
 
 # filtered list of modules included in the signed EFI grub image, excluding
@@ -60,38 +61,15 @@ GRUB_MODULES = \
 	raid6rec \
 	video
 
-# Download the latest version of package $1 for architecture $(ARCH), unpacking
-# it into $(STAGEDIR). For example, the following invocation will download the
-# latest version of u-boot-rpi for armhf, and unpack it under STAGEDIR:
-#
-#  $(call stage_package,u-boot-rpi)
-#
-define stage_package
-	mkdir -p $(STAGEDIR)/tmp
-	( \
-		cd $(STAGEDIR)/tmp && \
-		apt-get download \
-			-o APT::Architecture=$(ARCH) $$( \
-				apt-cache \
-					-o APT::Architecture=$(ARCH) \
-					showpkg $(1) | \
-					sed -n -e 's/^Package: *//p' | \
-					sort -V | tail -1 \
-			); \
-	)
-	dpkg-deb --extract $$(ls $(STAGEDIR)/tmp/$(1)*.deb | tail -1) $(STAGEDIR)
-endef
-
 all: boot install
 
 boot:
-	# Check if we're running under snapcraft. If not, we need to 'stage'
-	# some packages by ourselves.
-ifndef SNAPCRAFT_PROJECT_NAME
-	$(call stage_package,grub-pc-bin)
-	$(call stage_package,grub-efi-amd64-signed)
-	$(call stage_package,shim-signed)
-endif
+	pull-lp-debs -a $(ARCH) -D ubuntu grub-pc-bin $(SERIES)
+	dpkg-deb -x grub-pc-bin_*.deb $(STAGEDIR)
+	pull-lp-debs -a $(ARCH) -D ubuntu grub2-signed $(SERIES)
+	dpkg-deb -x grub-efi-amd64-signed_*.deb $(STAGEDIR)
+	pull-lp-debs -a $(ARCH) -D ubuntu shim-signed $(SERIES)
+	dpkg-deb -x shim-signed_*.deb $(STAGEDIR)
 	dd if=$(STAGEDIR)/usr/lib/grub/i386-pc/boot.img of=pc-boot.img bs=440 count=1
 	/bin/echo -n -e '\x90\x90' | dd of=pc-boot.img seek=102 bs=1 conv=notrunc
 	grub-mkimage -d $(STAGEDIR)/usr/lib/grub/i386-pc/ -O i386-pc -o pc-core.img -p '(,gpt2)/EFI/ubuntu' $(GRUB_MODULES)
@@ -100,7 +78,7 @@ endif
 	# BIOS boot partition must be defined with an absolute offset.  The
 	# particular value here is 2049, or 0x01 0x08 0x00 0x00 in little-endian.
 	/bin/echo -n -e '\x01\x08\x00\x00' | dd of=pc-core.img seek=500 bs=1 conv=notrunc
-	cp $(STAGEDIR)/usr/lib/shim/shimx64.efi.signed shim.efi.signed
+	cp $(STAGEDIR)/usr/lib/shim/shimx64.efi.signed.latest shim.efi.signed
 	cp $(STAGEDIR)/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed grubx64.efi
 
 install:
