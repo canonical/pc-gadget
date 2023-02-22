@@ -14,8 +14,6 @@ parts:
     source: .
     build-packages:
       - ubuntu-dev-tools
-      - grub-pc-bin
-      - grub-common
     plugin: make
 
 hooks:
