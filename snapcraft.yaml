@@ -24,7 +24,21 @@ hooks:
       MODEL_APIKEY: ""
 
 parts:
+  # Temporary workaround until pinning is supported by snapcraft
+  pin-ucdev:
+    plugin: nil
+    override-pull: |
+      # This is run before the pull step of grub part, so we make sure
+      # we get the packages from the PPA.
+      set -x
+      cat <<'EOF' > /etc/apt/preferences.d/ucdev
+      Package: *
+      Pin: release LP-PPA-ucdev-uc-staging-ppa,a=jammy,n=jammy
+      Pin: origin ppa.launchpad.net
+      Pin-Priority: 1000
+      EOF
   grub:
+    after: [ pin-ucdev ]
     plugin: nil
     source: .
     build-packages:
