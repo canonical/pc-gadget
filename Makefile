@@ -5,6 +5,8 @@ STAGEDIR ?= "$(CURDIR)/stage"
 endif
 DESTDIR ?= "$(CURDIR)/install"
 ARCH ?= $(shell dpkg --print-architecture)
+SHIM_SIGNED := $(STAGEDIR)/usr/lib/shim/shimx64.efi.signed
+SHIM_LATEST := $(SHIM_SIGNED).latest
 
 # filtered list of modules included in the signed EFI grub image, excluding
 # ones that we don't think are useful in snappy.
@@ -100,7 +102,12 @@ endif
 	# BIOS boot partition must be defined with an absolute offset.  The
 	# particular value here is 2049, or 0x01 0x08 0x00 0x00 in little-endian.
 	/bin/echo -n -e '\x01\x08\x00\x00' | dd of=pc-core.img seek=500 bs=1 conv=notrunc
-	cp $(STAGEDIR)/usr/lib/shim/shimx64.efi.signed.latest shim.efi.signed
+
+	if [ -f "$(SHIM_LATEST)" ]; then \
+		cp $(SHIM_LATEST) shim.efi.signed; \
+	else \
+		cp $(SHIM_SIGNED) shim.efi.signed; \
+	fi
 	cp $(STAGEDIR)/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed grubx64.efi
 
 install:
