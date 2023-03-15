@@ -8,7 +8,7 @@ volumes:
         role: system-seed-null
         filesystem: vfat
         type: C12A7328-F81F-11D2-BA4B-00A0C93EC93B
-        size: 248951808
+        size: 786432000
         offset: 1048576
         update:
           edition: 2
@@ -19,16 +19,15 @@ volumes:
             target: EFI/boot/bootx64.efi
       - # Recovery partition
         type: E3C9E316-0B5C-4DB8-817D-F92DF00215AE
-        size: 8192000000
-        offset: 250000384
+        offset: 787480576
+        size: 12884901888
       - name: ubuntu-boot
         role: system-boot
         filesystem: ext4
         type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
         # Such that potentially there is space to later slot-in 1200M
         # large ubuntu-seed partition
-        # TODO check that offset is correct given the ESP size (?!)
-        offset: 9202M
+        offset: 14930673664
         size: 750M
         update:
           edition: 1
