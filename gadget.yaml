@@ -18,6 +18,7 @@ volumes:
           - source: shim.efi.signed
             target: EFI/boot/bootx64.efi
       - # Recovery partition
+        name: Basic data partition
         type: E3C9E316-0B5C-4DB8-817D-F92DF00215AE
         offset: 787480576
         size: 12884901888
