@@ -17,11 +17,6 @@ volumes:
             target: EFI/boot/grubx64.efi
           - source: shim.efi.signed
             target: EFI/boot/bootx64.efi
-      - # Recovery partition
-        name: Basic data partition
-        type: E3C9E316-0B5C-4DB8-817D-F92DF00215AE
-        offset: 787480576
-        size: 12884901888
       - name: ubuntu-boot
         role: system-boot
         filesystem: ext4
@@ -47,6 +42,3 @@ volumes:
         filesystem: ext4
         type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
         size: 4G
-kernel-cmdline:
-    allow:
-      - dhc-dev-mode
