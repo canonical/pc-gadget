@@ -9,7 +9,7 @@ confinement: strict
 grade: stable
 
 parts:
-  grub:
+  boot:
     plugin: nil
     stage-packages:
       - grub-efi-amd64-signed
