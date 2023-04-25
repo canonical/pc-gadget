@@ -25,6 +25,8 @@ parts:
       - shim.efi.signed
       - grubx64.efi
       - grub.conf
+      - usr/share/doc/shim-signed
+      - usr/share/doc/grub-efi-amd64-signed
   cmdline:
     plugin: dump
     source: dump
