@@ -1,5 +1,5 @@
 name: xinyi-pc-classic
-adopt-info: pc
+version: '22.04-0.1'
 type: gadget
 base: core22
 summary: Xinyi PC Classic gadget
@@ -8,15 +8,29 @@ description: |
 confinement: strict
 grade: stable
 
+# Min version to support fully FDE on classic
+assumes:
+  - snapd2.59.3
+
 parts:
-  pc:
+  boot:
     plugin: nil
-    override-pull: |
-      craftctl set version="$(snap info pc | sed -n 's|^  22/edge: *\(22-[0-9.]*\) *202.-.*|\1|p')"
-    stage-snaps:
-      - pc/22/edge
-    stage:
-      - -pc-boot.img
+    stage-packages:
+      - grub-efi-amd64-signed
+      - shim-signed
+    override-build: |
+      set -x
+      # grub.conf lets snapd identify grub as the bootloader on boot
+      install -m 644 /dev/null "$CRAFT_PART_INSTALL"/grub.conf
+    organize:
+      usr/lib/shim/shimx64.efi.dualsigned: shim.efi.signed
+      usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed: grubx64.efi
+    prime:
+      - shim.efi.signed
+      - grubx64.efi
+      - grub.conf
+      - usr/share/doc/shim-signed
+      - usr/share/doc/grub-efi-amd64-signed
   cmdline:
     plugin: dump
     source: dump
