@@ -8,6 +8,10 @@ description: |
 confinement: strict
 grade: stable
 
+# Min version to support fully FDE on classic
+assumes:
+  - snapd2.59.3
+
 parts:
   boot:
     plugin: nil
