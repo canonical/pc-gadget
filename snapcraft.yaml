@@ -23,6 +23,11 @@ hooks:
       # DO NOT check this API key into a publicly accessible VCS
       MODEL_APIKEY: ""
 
+
+# Min version to support shim 15.7
+assumes:
+  - snapd2.59.3
+
 parts:
   # Temporary workaround until pinning is supported by snapcraft
   pin-ucdev:
