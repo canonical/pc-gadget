@@ -9,12 +9,9 @@ confinement: strict
 grade: stable
 icon: icon.png
 
-parts:
-  grub:
-    source: .
-    build-packages:
-      - ubuntu-dev-tools
-    plugin: make
+package-repositories:
+ - type: apt
+   ppa: ucdev/uc-staging-ppa
 
 hooks:
   prepare-device:
@@ -25,3 +22,56 @@ hooks:
       # for instructions on how to generate an API key
       # DO NOT check this API key into a publicly accessible VCS
       MODEL_APIKEY: ""
+
+
+# Min version to support shim 15.7
+assumes:
+  - snapd2.59.3
+
+parts:
+  # Temporary workaround until pinning is supported by snapcraft
+  pin-ucdev:
+    plugin: nil
+    override-pull: |
+      # This is run before the pull step of grub part, so we make sure
+      # we get the packages from the PPA.
+      set -x
+      cat <<'EOF' > /etc/apt/preferences.d/ucdev
+      Package: *
+      Pin: release LP-PPA-ucdev-uc-staging-ppa,a=jammy,n=jammy
+      Pin: origin ppa.launchpad.net
+      Pin-Priority: 1000
+      EOF
+  mbr:
+    source: .
+    build-packages:
+      - ubuntu-dev-tools
+    plugin: make
+  grub:
+    after: [ pin-ucdev ]
+    plugin: nil
+    source: .
+    build-packages:
+      - ubuntu-dev-tools
+      - grub-pc-bin
+      - grub-common
+      - sbsigntool
+    stage-packages:
+      - grub-efi-amd64-signed
+      - shim-signed
+    override-build: |
+      set -x
+      # Make sure we have signatures from the UC certificates
+      sbverify --list "$CRAFT_PART_INSTALL"/usr/lib/shim/shimx64.efi.dualsigned |
+          grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
+      sbverify --list "$CRAFT_PART_INSTALL"/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed |
+          grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
+      # grub.conf lets snapd identify grub as the bootloader on boot
+      install -m 644 /dev/null "$CRAFT_PART_INSTALL"/grub.conf
+    organize:
+      usr/lib/shim/shimx64.efi.dualsigned: shim.efi.signed
+      usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed: grubx64.efi
+    prime:
+      - shim.efi.signed
+      - grubx64.efi
+      - grub.conf
