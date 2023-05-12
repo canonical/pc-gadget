@@ -33,8 +33,6 @@ volumes:
             target: EFI/boot/grubx64.efi
           - source: shim.efi.signed
             target: EFI/boot/bootx64.efi
-          - source: shim.efi.signed
-            target: EFI/ubuntu/shimx64.efi
       - name: ubuntu-boot
         role: system-boot
         filesystem: ext4
