@@ -13,6 +13,10 @@ package-repositories:
  - type: apt
    ppa: ucdev/uc-staging-ppa
 
+# Min version to support shim 15.7
+assumes:
+  - snapd2.59.3
+
 parts:
   grub:
     plugin: nil
