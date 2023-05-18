@@ -12,6 +12,7 @@ icon: icon.png
 package-repositories:
  - type: apt
    ppa: ucdev/uc-staging-ppa
+   priority: always
 
 hooks:
   prepare-device:
@@ -23,7 +24,6 @@ hooks:
       # DO NOT check this API key into a publicly accessible VCS
       MODEL_APIKEY: ""
 
-
 # Min version to support shim 15.7
 # Using passthrough until LP#2019931 is fixed
 passthrough:
@@ -31,49 +31,62 @@ passthrough:
     - snapd2.59.3
 
 parts:
-  # Temporary workaround until pinning is supported by snapcraft
-  pin-ucdev:
-    plugin: nil
-    override-pull: |
-      # This is run before the pull step of grub part, so we make sure
-      # we get the packages from the PPA.
-      set -x
-      cat <<'EOF' > /etc/apt/preferences.d/ucdev
-      Package: *
-      Pin: release LP-PPA-ucdev-uc-staging-ppa,a=jammy,n=jammy
-      Pin: origin ppa.launchpad.net
-      Pin-Priority: 1000
-      EOF
   mbr:
-    source: .
+    source: legacy-bios
     build-packages:
       - ubuntu-dev-tools
     plugin: make
-  grub:
-    after: [ pin-ucdev ]
+    override-build: |
+      if [ "$CRAFT_TARGET_ARCH" != amd64 ]; then
+          exit
+      fi
+      craftctl default
+  boot-assets:
     plugin: nil
-    source: .
     build-packages:
-      - ubuntu-dev-tools
-      - grub-pc-bin
-      - grub-common
       - sbsigntool
     stage-packages:
-      - grub-efi-amd64-signed
+      - grub-efi-$CRAFT_TARGET_ARCH-signed
       - shim-signed
     override-build: |
       set -x
+
+      # Set some variables that depend on the architecture
+      grub_target=x86_64
+      grub_bin=grubx64.efi.signed
+      shim_bin=shimx64.efi.dualsigned
+      if [ "$CRAFT_TARGET_ARCH" = arm64 ]; then
+          grub_target=arm64
+          grub_bin=grubaa64.efi.signed
+          shim_bin=shimaa64.efi.dualsigned
+      fi
+
       # Make sure we have signatures from the UC certificates
-      sbverify --list "$CRAFT_PART_INSTALL"/usr/lib/shim/shimx64.efi.dualsigned |
-          grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
-      sbverify --list "$CRAFT_PART_INSTALL"/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed |
-          grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
+      shim_path="$CRAFT_PART_INSTALL"/usr/lib/shim/$shim_bin
+      grub_path="$CRAFT_PART_INSTALL"/usr/lib/grub/"$grub_target"-efi-signed/$grub_bin
+      sbverify --list "$shim_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
+      sbverify --list "$grub_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
+
+      # Move shim/grub to the expected path
+      install -m 644 "$shim_path" "$CRAFT_PART_INSTALL"/shim.efi.signed
+      install -m 644 "$grub_path" "$CRAFT_PART_INSTALL"/${grub_bin%.signed}
+
+      # Remove all the bits we do not need, keeping changelogs and copyrights
+      # (using organize/prime is not possible due to different names per arch - x64/aa64)
+      find "$CRAFT_PART_INSTALL"/ -type f,l \
+                -not -path "$SNAPCRAFT_PART_INSTALL"/shim.efi.signed \
+                -not -path "$SNAPCRAFT_PART_INSTALL"/${grub_bin%.signed} \
+                -not -path "$SNAPCRAFT_PART_INSTALL"/usr/share/doc/grub-efi-$CRAFT_TARGET_ARCH-signed/'*' \
+           -and -not -path "$SNAPCRAFT_PART_INSTALL"/'usr/share/doc/shim-signed/*' \
+           -delete
+      find "$SNAPCRAFT_PART_INSTALL"/ -type d -empty -delete
+
       # grub.conf lets snapd identify grub as the bootloader on boot
       install -m 644 /dev/null "$CRAFT_PART_INSTALL"/grub.conf
-    organize:
-      usr/lib/shim/shimx64.efi.dualsigned: shim.efi.signed
-      usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed: grubx64.efi
-    prime:
-      - shim.efi.signed
-      - grubx64.efi
-      - grub.conf
+  gadget:
+    plugin: nil
+    source: gadget
+    override-build:
+      # We need to install directly in the project dir as snapcraft checks there
+      # for gadget.yaml instead of looking first at the prime folder.
+      install -m 644 gadget-"$CRAFT_TARGET_ARCH".yaml "$CRAFT_PROJECT_DIR"/gadget.yaml
