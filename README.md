@@ -1,7 +1,7 @@
-# 64bit PC Gadget Snap
+# arm64 PC Gadget Snap
 
 This repository contains the official Ubuntu Core gadget snap for 64bit
-Personal Computers using Intel or AMD processors. 
+Personal Computers using ARM64 processors.
 
 ## Gadget Snaps
 

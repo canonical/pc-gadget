@@ -2,7 +2,7 @@ name: pc
 version: '16.04-0.9'
 type: gadget
 base: core20
-summary: PC gadget for generic devices
+summary: PC gadget for generic devices – arm64 version
 description: |
     This gadget enables generic pc devices to work with Ubuntu Core
 grade: stable
@@ -13,8 +13,8 @@ parts:
   grub-prepare:
     plugin: nil
     stage-packages:
-      - grub-efi-amd64-signed
-      - grub-pc-bin
+      - grub-efi-arm64-signed
+      - grub-efi-arm64-bin
       - shim-signed
     prime: [ -* ]
   grub:
