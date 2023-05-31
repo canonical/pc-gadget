@@ -136,7 +136,7 @@ endif
 	fi
 	cp $(STAGEDIR)/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed grubx64.efi
 
-install:
+install: boot
 	mkdir -p $(DESTDIR)
 	install -m 644 pc-boot.img pc-core.img shim.efi.signed grubx64.efi $(DESTDIR)/
 	install -m 644 grub.conf grub.cfg $(DESTDIR)/
