@@ -162,7 +162,7 @@ install: boot
 	install -m 644 grub.conf grub.cfg $(DESTDIR)/
 	# For classic builds we also need to prime the gadget.yaml
 	mkdir -p $(DESTDIR)/meta
-	cp gadget.yaml $(DESTDIR)/meta/
+	cp gadget-$(ARCH).yaml $(DESTDIR)/meta/gadget.yaml
 
 # only used locally, not relevant for snapcraft, livecd-rootfs or ubuntu-image
 clean:
