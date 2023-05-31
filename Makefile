@@ -27,6 +27,9 @@ $(warning Setting SERIES to $(SERIES) for local build)
 endif
 endif
 
+# set LEGACY_BOOT to legacy-boot target name if we're building backwards
+# compatible pc-boot.img and pc-core.img
+LEGACY_BOOT := $(if $(findstring $(ARCH),amd64),legacy-boot,)
 
 DESTDIR ?= "$(CURDIR)/install"
 SHIM_SIGNED := $(STAGEDIR)/usr/lib/shim/shimx64.efi.signed
@@ -112,13 +115,13 @@ endef
 
 all: boot install
 
-boot:
+# this generates 32-bits pc-boot.img and pc-core.img for backwards
+# compatibility with non-EFI BIOSes
+legacy-boot:
 	# Check if we're running under snapcraft. If not, we need to 'stage'
 	# some packages by ourselves.
 ifndef SNAPCRAFT_PROJECT_NAME
 	$(call stage_package,grub-pc-bin)
-	$(call stage_package,grub-efi-amd64-signed)
-	$(call stage_package,shim-signed)
 endif
 	dd if=$(STAGEDIR)/usr/lib/grub/i386-pc/boot.img of=pc-boot.img bs=440 count=1
 	/bin/echo -n -e '\x90\x90' | dd of=pc-boot.img seek=102 bs=1 conv=notrunc
@@ -129,6 +132,14 @@ endif
 	# particular value here is 2049, or 0x01 0x08 0x00 0x00 in little-endian.
 	/bin/echo -n -e '\x01\x08\x00\x00' | dd of=pc-core.img seek=500 bs=1 conv=notrunc
 
+boot: $(LEGACY_BOOT)
+	# Check if we're running under snapcraft. If not, we need to 'stage'
+	# some packages by ourselves.
+ifndef SNAPCRAFT_PROJECT_NAME
+	$(call stage_package,grub-efi-amd64-signed)
+	$(call stage_package,shim-signed)
+endif
+
 	if [ -f "$(SHIM_LATEST)" ]; then \
 		cp $(SHIM_LATEST) shim.efi.signed; \
 	else \
@@ -138,7 +149,9 @@ endif
 
 install: boot
 	mkdir -p $(DESTDIR)
-	install -m 644 pc-boot.img pc-core.img shim.efi.signed grubx64.efi $(DESTDIR)/
+	install -m 644 \
+	    $(if $(LEGACY_BOOT),pc-boot.img pc-core.img) shim.efi.signed grubx64.efi \
+	    $(DESTDIR)/
 	install -m 644 grub.conf grub.cfg $(DESTDIR)/
 	# For classic builds we also need to prime the gadget.yaml
 	mkdir -p $(DESTDIR)/meta
@@ -150,4 +163,4 @@ clean:
 	rm -f pc-boot.img pc-core.img shim.efi.signed grubx64.efi
 	rm -rf $(DESTDIR)
 
-.PHONY: all boot install clean
+.PHONY: all $(LEGACY_BOOT) boot install clean
