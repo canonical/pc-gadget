@@ -1,10 +1,34 @@
+# this gadget can be built in two ways, either through snapcraft (and then a prebuilt gadget
+# is passed to ubuntu-image), or through make ARCH=a SERIES=s by livecd-rootfs or ubuntu-image
+
 ifdef SNAPCRAFT_STAGE
 STAGEDIR ?= "$(SNAPCRAFT_STAGE)"
 else
 STAGEDIR ?= "$(CURDIR)/stage"
 endif
+
+# ARCH should be set by livecd-rootfs or ubuntu-image, or through
+# SNAPCRAFT_TARGET_ARCH by snapcraft; output a warning if unset (e.g. local build)
+ifdef SNAPCRAFT_TARGET_ARCH
+ARCH := $(SNAPCRAFT_TARGET_ARCH)
+endif
+ifndef ARCH
+ARCH := $(shell dpkg --print-architecture)
+$(warning Setting ARCH to $(ARCH) for local build)
+endif
+
+# SERIES should be set by livecd-rootfs or snapcraft should setup a clean environment; output a
+# warning if unset (e.g. local build)
+ifndef SERIES
+SERIES := $(shell . /etc/os-release && echo $$UBUNTU_CODENAME)
+# no target series env var in snapcraft
+ifndef SNAPCRAFT_STAGE
+$(warning Setting SERIES to $(SERIES) for local build)
+endif
+endif
+
+
 DESTDIR ?= "$(CURDIR)/install"
-ARCH ?= $(shell dpkg --print-architecture)
 SHIM_SIGNED := $(STAGEDIR)/usr/lib/shim/shimx64.efi.signed
 SHIM_LATEST := $(SHIM_SIGNED).latest
 
