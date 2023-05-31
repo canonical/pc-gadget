@@ -27,17 +27,18 @@ $(warning Setting SERIES to $(SERIES) for local build)
 endif
 endif
 
-# set LEGACY_BOOT to legacy-boot target name if we're building backwards
-# compatible pc-boot.img and pc-core.img
-LEGACY_BOOT := $(if $(findstring $(ARCH),amd64),legacy-boot,)
-
 DESTDIR ?= "$(CURDIR)/install"
 SHIM_SIGNED := $(STAGEDIR)/usr/lib/shim/shimx64.efi.signed
 SHIM_LATEST := $(SHIM_SIGNED).latest
 
+# set LEGACY_BOOT to legacy-boot target name if we're building backwards
+# compatible pc-boot.img and pc-core.img
+LEGACY_BOOT := $(if $(findstring $(ARCH),amd64),legacy-boot,)
+
 # filtered list of modules included in the signed EFI grub image, excluding
-# ones that we don't think are useful in snappy.
-GRUB_MODULES = \
+# ones that we don't think are useful in snappy. These are only used for
+# legacy-boot target.
+GRUB_LEGACY_MODULES = \
 	all_video \
 	biosdisk \
 	boot \
@@ -128,7 +129,7 @@ legacy-boot:
 	$(MAKE) stage-package package=grub-pc-bin
 	dd if=$(STAGEDIR)/usr/lib/grub/i386-pc/boot.img of=pc-boot.img bs=440 count=1
 	/bin/echo -n -e '\x90\x90' | dd of=pc-boot.img seek=102 bs=1 conv=notrunc
-	grub-mkimage -d $(STAGEDIR)/usr/lib/grub/i386-pc/ -O i386-pc -o pc-core.img -p '(,gpt2)/EFI/ubuntu' $(GRUB_MODULES)
+	grub-mkimage -d $(STAGEDIR)/usr/lib/grub/i386-pc/ -O i386-pc -o pc-core.img -p '(,gpt2)/EFI/ubuntu' $(GRUB_LEGACY_MODULES)
 	# The first sector of the core image requires an absolute pointer to the
 	# second sector of the image.  Since this is always hard-coded, it means our
 	# BIOS boot partition must be defined with an absolute offset.  The
