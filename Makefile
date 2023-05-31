@@ -94,18 +94,17 @@ GRUB_MODULES = \
 #
 define stage_package
 	mkdir -p $(STAGEDIR)/tmp
-	( \
-		cd $(STAGEDIR)/tmp && \
-		apt-get download \
-			-o APT::Architecture=$(ARCH) $$( \
-				apt-cache \
-					-o APT::Architecture=$(ARCH) \
-					showpkg $(1) | \
-					sed -n -e 's/^Package: *//p' | \
-					sort -V | tail -1 \
-			); \
-	)
-	dpkg-deb --extract $$(ls $(STAGEDIR)/tmp/$(1)*.deb | tail -1) $(STAGEDIR)
+	# setup chdist APT environment for SERIES-ARCH and run apt update
+	if [ ! -d  $(STAGEDIR)/tmp/chdist ]; then \
+	    chdist -d $(STAGEDIR)/tmp/chdist -a $(ARCH) create $(SERIES)-$(ARCH); \
+	    echo "deb http://archive.ubuntu.com/ubuntu/ $(SERIES) main" >>$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
+	    echo "deb http://archive.ubuntu.com/ubuntu/ $(SERIES)-updates main" >>$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
+	    chdist -d $(STAGEDIR)/tmp/chdist -a $(ARCH) apt $(SERIES)-$(ARCH) update; \
+	fi
+	# download and unpack package
+	cd $(STAGEDIR)/tmp && \
+	    chdist -d $(STAGEDIR)/tmp/chdist -a $(ARCH) apt $(SERIES)-$(ARCH) download $(1)
+	dpkg-deb --extract $(STAGEDIR)/tmp/$(1)_*.deb $(STAGEDIR)
 endef
 
 all: boot install
