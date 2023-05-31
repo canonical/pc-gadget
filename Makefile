@@ -89,13 +89,22 @@ GRUB_MODULES = \
 	raid6rec \
 	video
 
-# Download the latest version of package $1 for architecture $(ARCH), unpacking
+all: boot install
+
+# Check if we're running under snapcraft. If not, we need to 'stage' some
+# packages by ourselves.
+ifdef SNAPCRAFT_PROJECT_NAME
+stage-package:
+	$(info Skipping staging of package $(package) under snapcraft)
+else
+# Download the latest version of package $package for architecture $(ARCH), unpacking
 # it into $(STAGEDIR). For example, the following invocation will download the
 # latest version of u-boot-rpi for armhf, and unpack it under STAGEDIR:
 #
-#  $(call stage_package,u-boot-rpi)
+#  $(MAKE) stage-package package=u-boot-rpi
 #
-define stage_package
+stage-package:
+	$(info Staging package $(package)...)
 	mkdir -p $(STAGEDIR)/tmp
 	# setup chdist APT environment for SERIES-ARCH and run apt update
 	if [ ! -d  $(STAGEDIR)/tmp/chdist ]; then \
@@ -109,20 +118,14 @@ define stage_package
 	fi
 	# download and unpack package
 	cd $(STAGEDIR)/tmp && \
-	    chdist -d $(STAGEDIR)/tmp/chdist -a $(ARCH) apt $(SERIES)-$(ARCH) download $(1)
-	dpkg-deb --extract $(STAGEDIR)/tmp/$(1)_*.deb $(STAGEDIR)
-endef
-
-all: boot install
+	    chdist -d $(STAGEDIR)/tmp/chdist -a $(ARCH) apt $(SERIES)-$(ARCH) download $(package)
+	dpkg-deb --extract $(STAGEDIR)/tmp/$(package)_*.deb $(STAGEDIR)
+endif
 
 # this generates 32-bits pc-boot.img and pc-core.img for backwards
 # compatibility with non-EFI BIOSes
 legacy-boot:
-	# Check if we're running under snapcraft. If not, we need to 'stage'
-	# some packages by ourselves.
-ifndef SNAPCRAFT_PROJECT_NAME
-	$(call stage_package,grub-pc-bin)
-endif
+	$(MAKE) stage-package package=grub-pc-bin
 	dd if=$(STAGEDIR)/usr/lib/grub/i386-pc/boot.img of=pc-boot.img bs=440 count=1
 	/bin/echo -n -e '\x90\x90' | dd of=pc-boot.img seek=102 bs=1 conv=notrunc
 	grub-mkimage -d $(STAGEDIR)/usr/lib/grub/i386-pc/ -O i386-pc -o pc-core.img -p '(,gpt2)/EFI/ubuntu' $(GRUB_MODULES)
@@ -133,12 +136,8 @@ endif
 	/bin/echo -n -e '\x01\x08\x00\x00' | dd of=pc-core.img seek=500 bs=1 conv=notrunc
 
 boot: $(LEGACY_BOOT)
-	# Check if we're running under snapcraft. If not, we need to 'stage'
-	# some packages by ourselves.
-ifndef SNAPCRAFT_PROJECT_NAME
-	$(call stage_package,grub-efi-amd64-signed)
-	$(call stage_package,shim-signed)
-endif
+	$(MAKE) stage-package package=grub-efi-amd64-signed
+	$(MAKE) stage-package package=shim-signed
 
 	if [ -f "$(SHIM_LATEST)" ]; then \
 		cp $(SHIM_LATEST) shim.efi.signed; \
@@ -163,4 +162,4 @@ clean:
 	rm -f pc-boot.img pc-core.img shim.efi.signed grubx64.efi
 	rm -rf $(DESTDIR)
 
-.PHONY: all $(LEGACY_BOOT) boot install clean
+.PHONY: all stage-package $(LEGACY_BOOT) boot install clean
