@@ -143,3 +143,10 @@ install:
 	# For classic builds we also need to prime the gadget.yaml
 	mkdir -p $(DESTDIR)/meta
 	cp gadget.yaml $(DESTDIR)/meta/
+
+# only used locally, not relevant for snapcraft, livecd-rootfs or ubuntu-image
+clean:
+	rm -rf $(STAGEDIR)
+	rm -f pc-boot.img pc-core.img shim.efi.signed grubx64.efi
+	rm -rf $(DESTDIR)
+
