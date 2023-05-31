@@ -17,6 +17,13 @@ ARCH := $(shell dpkg --print-architecture)
 $(warning Setting ARCH to $(ARCH) for local build)
 endif
 
+# architecture specific names
+EFI_ARCH_amd64 := x64
+EFI_ARCH = $(EFI_ARCH_$(ARCH))
+GRUB_TARGET_amd64 := x86_64-efi-signed
+GRUB_TARGET = $(GRUB_TARGET_$(ARCH))
+$(if $(EFI_ARCH),,$(error Unknown EFI architecture))
+
 # SERIES should be set by livecd-rootfs or snapcraft should setup a clean environment; output a
 # warning if unset (e.g. local build)
 ifndef SERIES
@@ -28,7 +35,7 @@ endif
 endif
 
 DESTDIR ?= "$(CURDIR)/install"
-SHIM_SIGNED := $(STAGEDIR)/usr/lib/shim/shimx64.efi.signed
+SHIM_SIGNED := $(STAGEDIR)/usr/lib/shim/shim$(EFI_ARCH).efi.signed
 SHIM_LATEST := $(SHIM_SIGNED).latest
 
 # set LEGACY_BOOT to legacy-boot target name if we're building backwards
@@ -145,12 +152,12 @@ boot: $(LEGACY_BOOT)
 	else \
 		cp $(SHIM_SIGNED) shim.efi.signed; \
 	fi
-	cp $(STAGEDIR)/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed grubx64.efi
+	cp $(STAGEDIR)/usr/lib/grub/$(GRUB_TARGET)/grub$(EFI_ARCH).efi.signed grub$(EFI_ARCH).efi
 
 install: boot
 	mkdir -p $(DESTDIR)
 	install -m 644 \
-	    $(if $(LEGACY_BOOT),pc-boot.img pc-core.img) shim.efi.signed grubx64.efi \
+	    $(if $(LEGACY_BOOT),pc-boot.img pc-core.img) shim.efi.signed grub$(EFI_ARCH).efi \
 	    $(DESTDIR)/
 	install -m 644 grub.conf grub.cfg $(DESTDIR)/
 	# For classic builds we also need to prime the gadget.yaml
@@ -160,7 +167,7 @@ install: boot
 # only used locally, not relevant for snapcraft, livecd-rootfs or ubuntu-image
 clean:
 	rm -rf $(STAGEDIR)
-	rm -f pc-boot.img pc-core.img shim.efi.signed grubx64.efi
+	rm -f pc-boot.img pc-core.img shim.efi.signed grub$(EFI_ARCH).efi
 	rm -rf $(DESTDIR)
 
 .PHONY: all stage-package $(LEGACY_BOOT) boot install clean
