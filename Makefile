@@ -97,8 +97,11 @@ define stage_package
 	# setup chdist APT environment for SERIES-ARCH and run apt update
 	if [ ! -d  $(STAGEDIR)/tmp/chdist ]; then \
 	    chdist -d $(STAGEDIR)/tmp/chdist -a $(ARCH) create $(SERIES)-$(ARCH); \
-	    echo "deb http://archive.ubuntu.com/ubuntu/ $(SERIES) main" >>$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
+	    echo "deb http://archive.ubuntu.com/ubuntu/ $(SERIES) main" >$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
 	    echo "deb http://archive.ubuntu.com/ubuntu/ $(SERIES)-updates main" >>$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
+	    if [ -n "$$PROPOSED" ]; then \
+	        echo "deb http://archive.ubuntu.com/ubuntu/ $(SERIES)-proposed main" >>$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
+	    fi; \
 	    chdist -d $(STAGEDIR)/tmp/chdist -a $(ARCH) apt $(SERIES)-$(ARCH) update; \
 	fi
 	# download and unpack package
