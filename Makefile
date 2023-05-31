@@ -150,3 +150,4 @@ clean:
 	rm -f pc-boot.img pc-core.img shim.efi.signed grubx64.efi
 	rm -rf $(DESTDIR)
 
+.PHONY: all boot install clean
