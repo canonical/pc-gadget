@@ -17,10 +17,14 @@ ARCH := $(shell dpkg --print-architecture)
 $(warning Setting ARCH to $(ARCH) for local build)
 endif
 
+ARCHIVE := $(if $(findstring $(ARCH),amd64 i386),http://archive.ubuntu.com/ubuntu/,http://ports.ubuntu.com/ubuntu-ports/)
+
 # architecture specific names
 EFI_ARCH_amd64 := x64
+EFI_ARCH_arm64 := aa64
 EFI_ARCH = $(EFI_ARCH_$(ARCH))
 GRUB_TARGET_amd64 := x86_64-efi-signed
+GRUB_TARGET_arm64 := arm64-efi-signed
 GRUB_TARGET = $(GRUB_TARGET_$(ARCH))
 $(if $(EFI_ARCH),,$(error Unknown EFI architecture))
 
@@ -117,10 +121,10 @@ stage-package:
 	# setup chdist APT environment for SERIES-ARCH and run apt update
 	if [ ! -d  $(STAGEDIR)/tmp/chdist ]; then \
 	    chdist -d $(STAGEDIR)/tmp/chdist -a $(ARCH) create $(SERIES)-$(ARCH); \
-	    echo "deb http://archive.ubuntu.com/ubuntu/ $(SERIES) main" >$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
-	    echo "deb http://archive.ubuntu.com/ubuntu/ $(SERIES)-updates main" >>$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
+	    echo "deb $(ARCHIVE) $(SERIES) main" >$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
+	    echo "deb $(ARCHIVE) $(SERIES)-updates main" >>$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
 	    if [ -n "$$PROPOSED" ]; then \
-	        echo "deb http://archive.ubuntu.com/ubuntu/ $(SERIES)-proposed main" >>$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
+	        echo "deb $(ARCHIVE) $(SERIES)-proposed main" >>$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
 	    fi; \
 	    chdist -d $(STAGEDIR)/tmp/chdist -a $(ARCH) apt $(SERIES)-$(ARCH) update; \
 	fi
@@ -144,7 +148,7 @@ legacy-boot:
 	/bin/echo -n -e '\x01\x08\x00\x00' | dd of=pc-core.img seek=500 bs=1 conv=notrunc
 
 boot: $(LEGACY_BOOT)
-	$(MAKE) stage-package package=grub-efi-amd64-signed
+	$(MAKE) stage-package package=grub-efi-$(ARCH)-signed
 	$(MAKE) stage-package package=shim-signed
 
 	if [ -f "$(SHIM_LATEST)" ]; then \
