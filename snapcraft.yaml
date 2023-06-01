@@ -14,7 +14,7 @@ parts:
     plugin: nil
     override-build: |
       # snapcraft reads gadget.yaml from project dir
-      install -m 644 gadget-$SNAPCRAFT_TARGET_ARCH.yaml $SNAPCRAFT_PROJECT_DIR
+      install -m 644 gadget-$SNAPCRAFT_TARGET_ARCH.yaml $SNAPCRAFT_PROJECT_DIR/gadget.yaml
   grub-prepare:
     plugin: nil
     stage-packages:
