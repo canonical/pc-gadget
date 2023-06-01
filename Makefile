@@ -118,7 +118,10 @@ else
 stage-package:
 	$(info Staging package $(package)...)
 	mkdir -p $(STAGEDIR)/tmp
-	# setup chdist APT environment for SERIES-ARCH and run apt update
+	# setup chdist APT environment for SERIES-ARCH and run apt update; -updates
+	# is always used, -security is ommitted (as packages are regularly copied
+	# from -security to -updates) and -proposed is optionally enabled if PROPOSED
+	# is non-empty, following livecd-rootfs logic
 	if [ ! -d  $(STAGEDIR)/tmp/chdist ]; then \
 	    chdist -d $(STAGEDIR)/tmp/chdist -a $(ARCH) create $(SERIES)-$(ARCH); \
 	    echo "deb $(ARCHIVE) $(SERIES) main" >$(STAGEDIR)/tmp/chdist/$(SERIES)-$(ARCH)/etc/apt/sources.list; \
