@@ -1,5 +1,5 @@
 name: pc
-version: '22-0.3'
+version: '22-0.4'
 type: gadget
 base: core22
 summary: PC gadget for generic devices
