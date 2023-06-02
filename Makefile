@@ -169,12 +169,14 @@ install: boot
 	install -m 644 grub.conf grub.cfg $(DESTDIR)/
 	# For classic builds we also need to prime the gadget.yaml
 	mkdir -p $(DESTDIR)/meta
+	ln gadget-$(ARCH).yaml gadget.yaml
 	cp gadget-$(ARCH).yaml $(DESTDIR)/meta/gadget.yaml
 
 # only used locally, not relevant for snapcraft, livecd-rootfs or ubuntu-image
 clean:
 	rm -rf $(STAGEDIR)
 	rm -f pc-boot.img pc-core.img shim.efi.signed grub$(EFI_ARCH).efi
+	rm -f gadget.yaml
 	rm -rf $(DESTDIR)
 
 .PHONY: all stage-package $(LEGACY_BOOT) boot install clean
