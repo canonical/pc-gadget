@@ -31,8 +31,6 @@ assumes:
 parts:
   mbr:
     source: legacy-bios
-    build-packages:
-      - ubuntu-dev-tools
     plugin: make
     override-build: |
       if [ "$CRAFT_TARGET_ARCH" != amd64 ]; then
