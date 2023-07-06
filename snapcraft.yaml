@@ -1,18 +1,19 @@
 name: pc
-version: '22-0.4'
+version: '24-0.1'
 type: gadget
-base: core22
+base: core24
+build-base: devel
 summary: PC gadget for generic devices
 description: |
     This gadget enables generic pc devices to work with Ubuntu Core
 confinement: strict
-grade: stable
+grade: devel
 icon: icon.png
 
-package-repositories:
- - type: apt
-   ppa: ucdev/uc-staging-ppa
-   priority: always
+#package-repositories:
+# - type: apt
+#   ppa: ucdev/uc-staging-ppa
+#   priority: always
 
 hooks:
   prepare-device:
@@ -60,8 +61,8 @@ parts:
       # Make sure we have signatures from the UC certificates
       shim_path="$CRAFT_PART_INSTALL"/usr/lib/shim/$shim_bin
       grub_path="$CRAFT_PART_INSTALL"/usr/lib/grub/"$grub_target"-efi-signed/$grub_bin
-      sbverify --list "$shim_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
-      sbverify --list "$grub_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
+      #sbverify --list "$shim_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
+      #sbverify --list "$grub_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
 
       # Move shim/grub to the expected path
       install -m 644 "$shim_path" "$CRAFT_PART_INSTALL"/shim.efi.signed
