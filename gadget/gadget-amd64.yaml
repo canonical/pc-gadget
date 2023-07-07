@@ -37,7 +37,6 @@ volumes:
         role: system-boot
         filesystem: ext4
         type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
-        # whats the appropriate size?
         size: 750M
         update:
           edition: 1
