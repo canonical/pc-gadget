@@ -1,0 +1,26 @@
+name: pc
+version: '22-0.4'
+type: gadget
+base: core22
+summary: PC gadget for generic FIPS devices
+description: |
+    This gadget enables generic pc devices to work with Ubuntu Core
+confinement: strict
+grade: stable
+
+# Min version to support shim 15.7
+assumes:
+  - snapd2.59.3
+
+parts:
+  boot-assets:
+    plugin: dump
+    source: .
+    stage-snaps:
+      - pc/22/stable
+    override-build: |
+      # We need to install directly in the project dir as snapcraft checks there
+      # for gadget.yaml instead of looking first at the prime folder.
+      install -m 644 "$CRAFT_PART_INSTALL"/meta.pc/gadget.yaml "$CRAFT_PROJECT_DIR"/gadget.yaml
+      craftctl default
+
