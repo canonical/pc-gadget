@@ -24,9 +24,9 @@ hooks:
       # DO NOT check this API key into a publicly accessible VCS
       MODEL_APIKEY: ""
 
-# Min version to support shim 15.7
+# Min version to support shim 15.7 and min-size
 assumes:
-  - snapd2.59.3
+  - snapd2.60.1
 
 parts:
   mbr:
