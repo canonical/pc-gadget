@@ -11,12 +11,12 @@ volumes:
         type: EF,C12A7328-F81F-11D2-BA4B-00A0C93EC93B
         size: 1200M
         update:
-          edition: 2
+          edition: 3
         content:
           - source: grubaa64.efi
-            target: EFI/boot/grubaa64.efi
+            target: EFI/ubuntu/grubaa64.efi
           - source: shim.efi.signed
-            target: EFI/boot/bootaa64.efi
+            target: EFI/ubuntu/shimaa64.efi
       - name: ubuntu-boot
         role: system-boot
         filesystem: ext4
