@@ -11,7 +11,7 @@ volumes:
         type: C12A7328-F81F-11D2-BA4B-00A0C93EC93B
         size: 1200M
         update:
-          edition: 2
+          edition: 3
         content:
           - source: grubaa64.efi
             target: EFI/BOOT/grubaa64.efi
