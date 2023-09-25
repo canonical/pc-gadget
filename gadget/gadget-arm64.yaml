@@ -14,6 +14,8 @@ volumes:
           edition: 2
         content:
           - source: grubaa64.efi
+            target: EFI/BOOT/grubaa64.efi
+          - source: grubaa64.efi
             target: EFI/ubuntu/grubaa64.efi
           - source: shim.efi.signed
             target: EFI/BOOT/BOOTAA64.efi
