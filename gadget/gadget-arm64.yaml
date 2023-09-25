@@ -13,10 +13,18 @@ volumes:
         update:
           edition: 2
         content:
-          - source: grubaa64.efi
-            target: EFI/boot/grubaa64.efi
           - source: shim.efi.signed
-            target: EFI/boot/bootaa64.efi
+            target: EFI/BOOT/BOOTAA64.efi
+          - source: fbaa64.efi
+            target: EFI/BOOT/fbaa64.efi
+          - source: BOOTAA64.CSV
+            target: EFI/ubuntu/BOOTAA64.CSV
+          - source: grubaa64.efi
+            target: EFI/ubuntu/grubaa64.efi
+          - source: mmaa64.efi
+            target: EFI/ubuntu/mmaa64.efi
+          - source: shim.efi.signed
+            target: EFI/ubuntu/shimaa64.efi
       - name: ubuntu-boot
         role: system-boot
         filesystem: ext4
