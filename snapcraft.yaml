@@ -24,9 +24,9 @@ hooks:
       # DO NOT check this API key into a publicly accessible VCS
       MODEL_APIKEY: ""
 
-# Min version to support shim 15.7 and min-size
+# Min version to support shim 15.7 and min-size and assets in /EFI/ubuntu
 assumes:
-  - snapd2.60.1
+  - snapd2.61
 
 parts:
   mbr:
