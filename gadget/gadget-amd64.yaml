@@ -39,6 +39,8 @@ volumes:
             target: EFI/ubuntu/BOOTX64.CSV
           - source: grubx64.efi
             target: EFI/ubuntu/grubx64.efi
+          - source: mmx64.efi
+            target: EFI/ubuntu/mmx64.efi
           - source: shim.efi.signed
             target: EFI/ubuntu/shimx64.efi
       - name: ubuntu-boot
