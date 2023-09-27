@@ -31,8 +31,6 @@ volumes:
             target: EFI/BOOT/BOOTX64.efi
           - source: fbx64.efi
             target: EFI/BOOT/fbx64.efi
-          - source: grubx64.efi
-            target: EFI/BOOT/grubx64.efi
           - source: mmx64.efi
             target: EFI/BOOT/mmx64.efi
           - source: BOOTX64.CSV
