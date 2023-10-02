@@ -17,8 +17,6 @@ volumes:
             target: EFI/BOOT/BOOTAA64.efi
           - source: fbaa64.efi
             target: EFI/BOOT/fbaa64.efi
-          - source: mmaa64.efi
-            target: EFI/BOOT/mmaa64.efi
           - source: BOOTAA64.CSV
             target: EFI/ubuntu/BOOTAA64.CSV
           - source: grubaa64.efi
