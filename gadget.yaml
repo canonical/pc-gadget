@@ -11,7 +11,7 @@ volumes:
         size: 750M
         offset: 1M
         update:
-          edition: 2
+          edition: 3
         content:
           - source: grubx64.efi
             target: EFI/boot/grubx64.efi
@@ -23,12 +23,10 @@ volumes:
         type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
         size: 750M
         update:
-          edition: 1
+          edition: 2
         content:
           - source: grubx64.efi
             target: EFI/boot/grubx64.efi
-          - source: shim.efi.signed
-            target: EFI/boot/bootx64.efi
       - name: ubuntu-save
         role: system-save
         filesystem: ext4
