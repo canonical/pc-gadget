@@ -58,11 +58,11 @@ parts:
           shim_bin=shimaa64.efi.dualsigned
       fi
 
-      # Make sure we have signatures from the UC certificates
+      # Make sure we have have the right signatures
       shim_path="$CRAFT_PART_INSTALL"/usr/lib/shim/$shim_bin
       grub_path="$CRAFT_PART_INSTALL"/usr/lib/grub/"$grub_target"-efi-signed/$grub_bin
-      #sbverify --list "$shim_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
-      #sbverify --list "$grub_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
+      sbverify --list "$shim_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(2022 v1\)'
+      sbverify --list "$grub_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(2022 v1\)'
 
       # Move shim/grub to the expected path
       install -m 644 "$shim_path" "$CRAFT_PART_INSTALL"/shim.efi.signed
