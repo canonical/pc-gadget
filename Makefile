@@ -103,6 +103,10 @@ GRUB_LEGACY_MODULES = \
 
 all: boot install
 
+server: boot install
+
+desktop: boot install
+
 # Check if we're running under snapcraft. If not, we need to 'stage' some
 # packages by ourselves.
 ifdef SNAPCRAFT_PROJECT_NAME
