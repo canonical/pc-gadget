@@ -42,34 +42,9 @@ parts:
     plugin: nil
     build-packages:
       - sbsigntool
-      - wget
-      - attr
     stage-packages:
       - grub-efi-$CRAFT_ARCH_BUILD_FOR-signed
-    build-environment:
-      - shim_signed_version: 1.56+15.7-0ubuntu1
-    override-pull: |
-      craftctl default
-
-      # TODO: get shim as a stage package and add snapd 2.63 as requirement
-      case "${CRAFT_ARCH_BUILD_FOR}" in
-        amd64)
-          wget "http://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_${shim_signed_version}_amd64.deb"
-          sha256sum -c <<EOF
-      b2d84b300e68ac2139afee3f9a609857ef80f12eed9218087ced4b31ecb7fd76  shim-signed_${shim_signed_version}_amd64.deb
-      EOF
-          ;;
-        arm64)
-          wget "http://ports.ubuntu.com/pool/main/s/shim-signed/shim-signed_${shim_signed_version}_arm64.deb"
-          sha256sum -c <<EOF
-      375de6dd3a0419ed7ecd6465f2366ff5312e58c9ee7d67959ac57f59c81a0706  shim-signed_${shim_signed_version}_arm64.deb
-      EOF
-          ;;
-      esac
-      dpkg-deb -x "shim-signed_${shim_signed_version}_${CRAFT_ARCH_BUILD_FOR}.deb" "shim-signed_${shim_signed_version}/"
-      # to generate the manifest correctly
-      find "shim-signed_${shim_signed_version}/" -exec setfattr -n user.craft_parts.origin_stage_package -v "shim-signed=${shim_signed_version}" -h {} ";"
-
+      - shim-signed
     override-build: |
       set -x
 
@@ -84,17 +59,14 @@ parts:
       fi
 
       # Make sure we have have the right signatures
-      shim_path="shim-signed_${shim_signed_version}/usr/lib/shim/$shim_bin"
+      shim_path="${CRAFT_PART_INSTALL}"/usr/lib/shim/$shim_bin
       grub_path="${CRAFT_PART_INSTALL}"/usr/lib/grub/"$grub_target"-efi-signed/$grub_bin
       sbverify --list "$shim_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(2022 v1\)'
       sbverify --list "$grub_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(2022 v1\)'
 
       # Move shim/grub to the expected path
-      cp -a "$shim_path" "${CRAFT_PART_INSTALL}"/shim.efi.signed
+      install -m 644 "$shim_path" "${CRAFT_PART_INSTALL}"/shim.efi.signed
       install -m 644 "$grub_path" "${CRAFT_PART_INSTALL}"/${grub_bin%.signed}
-
-      mkdir -p "${CRAFT_PART_INSTALL}/usr/share/doc/shim-signed"
-      cp -arT "shim-signed_${shim_signed_version}/usr/share/doc/shim-signed" "${CRAFT_PART_INSTALL}/usr/share/doc/shim-signed"
 
       # Remove all the bits we do not need, keeping changelogs and copyrights
       # (using organize/prime is not possible due to different names per arch - x64/aa64)
