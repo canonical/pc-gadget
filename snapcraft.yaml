@@ -27,7 +27,7 @@ hooks:
 
 # Min version to support shim 15.7
 assumes:
-  - snapd2.59.3
+  - snapd2.63
 
 parts:
   mbr:
