@@ -2,12 +2,11 @@ name: pc
 version: '24-0.1'
 type: gadget
 base: core24
-build-base: devel
 summary: PC gadget for generic devices
 description: |
     This gadget enables generic pc devices to work with Ubuntu Core
 confinement: strict
-grade: devel
+grade: stable
 icon: icon.png
 
 #package-repositories:
