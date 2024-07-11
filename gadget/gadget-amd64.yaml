@@ -32,7 +32,13 @@ volumes:
           edition: 2
         content:
           - source: grubx64.efi
-            target: EFI/boot/grubx64.efi
+            target: EFI/ubuntu/grubx64.efi
+          - source: shim.efi.signed
+            target: EFI/ubuntu/shimx64.efi
+          - source: boot.csv
+            target: EFI/ubuntu/bootx64.csv
+          - source: fb.efi
+            target: EFI/boot/fbx64.efi
           - source: shim.efi.signed
             target: EFI/boot/bootx64.efi
       - name: ubuntu-boot
