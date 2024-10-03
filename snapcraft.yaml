@@ -2,7 +2,7 @@ name: pc
 adopt-info: pc
 version: '24.10-1'
 type: gadget
-base: core22
+base: core24
 summary: Classic PC gadget for generic amd64 devices
 description: |
     This gadget enables booting generic PC amd64 with classic Ubuntu
@@ -12,13 +12,15 @@ grade: stable
 parts:
   boot:
     plugin: nil
-    stage-packages:
-      - grub-efi-amd64-signed
-      - shim-signed
+    source: .
+    build-packages:
+      - devscripts
     override-build: |
       set -x
       # grub.conf lets snapd identify grub as the bootloader on boot
       install -m 644 /dev/null "$CRAFT_PART_INSTALL"/grub.conf
+      ./stage-from-series oracular grub-efi-amd64-signed
+      ./stage-from-series oracular shim-signed
     organize:
       usr/lib/shim/shimx64.efi.dualsigned: shim.efi.signed
       usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed: grubx64.efi
