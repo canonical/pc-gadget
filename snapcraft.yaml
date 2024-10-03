@@ -12,13 +12,17 @@ grade: stable
 parts:
   boot:
     plugin: nil
-    stage-packages:
-      - grub-efi-amd64-signed
-      - shim-signed
+    source: .
+    build-packages:
+      - devscripts
     override-build: |
       set -x
       # grub.conf lets snapd identify grub as the bootloader on boot
       install -m 644 /dev/null "$CRAFT_PART_INSTALL"/grub.conf
+      ./mkchdist
+      chdist -d "chdist" -a amd64 apt dist download grub-efi-amd64-signed shim-signed
+      dpkg-deb -x grub-efi-amd64-signed*.deb "$CRAFT_PART_INSTALL"
+      dpkg-deb -x shim-signed*.deb "$CRAFT_PART_INSTALL"
     organize:
       usr/lib/shim/shimx64.efi.dualsigned: shim.efi.signed
       usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed: grubx64.efi

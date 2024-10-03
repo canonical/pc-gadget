@@ -1,0 +1,9 @@
+#!/bin/bash
+ARCHIVE=http://archive.ubuntu.com/ubuntu
+SERIES=oracular
+ARCH=amd64
+chdist -d "chdist" -a $ARCH create dist
+echo "deb $ARCHIVE $SERIES main" >"chdist"/dist/etc/apt/sources.list
+echo "deb $ARCHIVE $SERIES-security main" >>"chdist"/dist/etc/apt/sources.list
+echo "deb $ARCHIVE $SERIES-updates main" >>"chdist"/dist/etc/apt/sources.list
+chdist -d "chdist" -a $ARCH apt dist update
