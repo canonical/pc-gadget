@@ -1,0 +1,18 @@
+#!/bin/bash -eux
+ARCHIVE=http://archive.ubuntu.com/ubuntu
+SERIES=$1
+PKG=$2
+ARCH=amd64
+if [ ! -d chdist/dist-$SERIES ]; then
+    chdist -d "chdist" -a $ARCH create dist-$SERIES
+    echo "deb $ARCHIVE $SERIES main" >"chdist"/dist-$SERIES/etc/apt/sources.list
+    echo "deb $ARCHIVE $SERIES-security main" >>"chdist"/dist-$SERIES/etc/apt/sources.list
+    echo "deb $ARCHIVE $SERIES-updates main" >>"chdist"/dist-$SERIES/etc/apt/sources.list
+    chdist -d "chdist" -a $ARCH apt-get dist-$SERIES update
+fi
+rm -rf pkg-tmp
+mkdir pkg-tmp
+cd pkg-tmp
+chdist -d "../chdist" -a $ARCH apt-get dist-$SERIES download $PKG
+cd -
+dpkg-deb -x pkg-tmp/$PKG*.deb "$CRAFT_PART_INSTALL"

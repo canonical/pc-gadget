@@ -19,10 +19,8 @@ parts:
       set -x
       # grub.conf lets snapd identify grub as the bootloader on boot
       install -m 644 /dev/null "$CRAFT_PART_INSTALL"/grub.conf
-      ./mkchdist
-      chdist -d "chdist" -a amd64 apt dist download grub-efi-amd64-signed shim-signed
-      dpkg-deb -x grub-efi-amd64-signed*.deb "$CRAFT_PART_INSTALL"
-      dpkg-deb -x shim-signed*.deb "$CRAFT_PART_INSTALL"
+      ./stage-from-series oracular grub-efi-amd64-signed
+      ./stage-from-series oracular shim-signed
     organize:
       usr/lib/shim/shimx64.efi.dualsigned: shim.efi.signed
       usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed: grubx64.efi
