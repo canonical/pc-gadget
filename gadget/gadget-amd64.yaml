@@ -29,7 +29,7 @@ volumes:
         # Size of around two seeds to allow for remodeling
         size: 1200M
         update:
-          edition: 2
+          edition: 3
         content:
           - source: grubx64.efi
             target: EFI/ubuntu/grubx64.efi
