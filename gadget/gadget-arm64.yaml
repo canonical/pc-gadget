@@ -12,7 +12,7 @@ volumes:
         # Size of around two seeds to allow for remodeling
         size: 1200M
         update:
-          edition: 2
+          edition: 3
         content:
           - source: grubaa64.efi
             target: EFI/ubuntu/grubaa64.efi
