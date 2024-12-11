@@ -40,12 +40,12 @@ parts:
   boot-assets:
     plugin: nil
     build-packages:
+      - devscripts
       - sbsigntool
-    stage-packages:
-      - grub-efi-$CRAFT_ARCH_BUILD_FOR-signed
-      - shim-signed
     override-build: |
       set -x
+      $CRAFT_PROJECT_DIR/stage-from-series plucky grub-efi-$CRAFT_ARCH_BUILD_FOR-signed
+      $CRAFT_PROJECT_DIR/stage-from-series plucky shim-signed
 
       # Set some variables that depend on the architecture
       grub_target=x86_64
