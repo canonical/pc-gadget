@@ -1,5 +1,5 @@
 name: pc
-version: '24-0.1'
+version: '25.04-1'
 type: gadget
 base: core24
 summary: PC gadget for generic devices
