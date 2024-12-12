@@ -58,7 +58,7 @@ parts:
           grub_bin=grubaa64.efi.signed
           shim_bin=shimaa64.efi.dualsigned
           fb_bin=fbaa64.efi
-          boot_csv=bootaa64.csv
+          boot_csv=BOOTAA64.CSV
       fi
 
       # Make sure we have have the right signatures
