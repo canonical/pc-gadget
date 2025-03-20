@@ -2,7 +2,7 @@ name: pc
 adopt-info: pc
 version: '25.04-2'
 type: gadget
-base: core22
+base: core24
 summary: Classic PC gadget for generic amd64 devices
 description: |
     This gadget enables booting generic PC amd64 with classic Ubuntu
