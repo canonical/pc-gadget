@@ -24,9 +24,9 @@ hooks:
       # DO NOT check this API key into a publicly accessible VCS
       MODEL_APIKEY: ""
 
-# Min version to support shim 15.7 and min-size
+# Min version to support shim 15.7 and min-size and assets in /EFI/ubuntu
 assumes:
-  - snapd2.60.1
+  - snapd2.61
 
 parts:
   mbr:
@@ -51,27 +51,44 @@ parts:
       grub_target=x86_64
       grub_bin=grubx64.efi.signed
       shim_bin=shimx64.efi.dualsigned
+      fb_bin=fbx64.efi
+      mm_bin=mmx64.efi
+      boot_csv=BOOTX64.CSV
       if [ "$CRAFT_TARGET_ARCH" = arm64 ]; then
           grub_target=arm64
           grub_bin=grubaa64.efi.signed
           shim_bin=shimaa64.efi.dualsigned
+          fb_bin=fbaa64.efi
+          mm_bin=mmaa64.efi
+          boot_csv=BOOTAA64.CSV
       fi
 
       # Make sure we have signatures from the UC certificates
       shim_path="$CRAFT_PART_INSTALL"/usr/lib/shim/$shim_bin
       grub_path="$CRAFT_PART_INSTALL"/usr/lib/grub/"$grub_target"-efi-signed/$grub_bin
+      fb_path="$CRAFT_PART_INSTALL"/usr/lib/shim/$fb_bin
+      mm_path="$CRAFT_PART_INSTALL"/usr/lib/shim/$mm_bin
+      csv_path="$CRAFT_PART_INSTALL"/usr/lib/shim/$boot_csv
       sbverify --list "$shim_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
       sbverify --list "$grub_path" | grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
+      sbverify --list "$fb_path"   | grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
+      sbverify --list "$mm_path"   | grep -E 'Canonical Ltd. Secure Boot Signing \(Ubuntu Core'
 
-      # Move shim/grub to the expected path
+      # Move assets to the expected paths
       install -m 644 "$shim_path" "$CRAFT_PART_INSTALL"/shim.efi.signed
       install -m 644 "$grub_path" "$CRAFT_PART_INSTALL"/${grub_bin%.signed}
+      install -m 644 "$fb_path"   "$CRAFT_PART_INSTALL"/$fb_bin
+      install -m 644 "$mm_path"   "$CRAFT_PART_INSTALL"/$mm_bin
+      install -m 644 "$csv_path"  "$CRAFT_PART_INSTALL"/$boot_csv
 
       # Remove all the bits we do not need, keeping changelogs and copyrights
       # (using organize/prime is not possible due to different names per arch - x64/aa64)
       find "$CRAFT_PART_INSTALL"/ -type f,l \
                 -not -path "$SNAPCRAFT_PART_INSTALL"/shim.efi.signed \
                 -not -path "$SNAPCRAFT_PART_INSTALL"/${grub_bin%.signed} \
+                -not -path "$SNAPCRAFT_PART_INSTALL"/$fb_bin \
+                -not -path "$SNAPCRAFT_PART_INSTALL"/$mm_bin \
+                -not -path "$SNAPCRAFT_PART_INSTALL"/$boot_csv \
                 -not -path "$SNAPCRAFT_PART_INSTALL"/usr/share/doc/grub-efi-$CRAFT_TARGET_ARCH-signed/'*' \
            -and -not -path "$SNAPCRAFT_PART_INSTALL"/'usr/share/doc/shim-signed/*' \
            -delete
