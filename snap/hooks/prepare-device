@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# This file is included for reference purposes. If MODEL_APIKEY is not set
+# in snapcraft.yaml (as is the default), it is a no-op. For more about how
+# to use this script to connect a device to an IoT App Store, see
+#  - https://ubuntu.com/core/services/guide/serial-vault-overview
+#  - https://ubuntu.com/core/services/guide/connecting-devices
+#  - https://snapcraft.io/docs/gadget-snap#heading--prepare
+
+set -eu
+
+if [ -z "$MODEL_APIKEY" ] ; then
+    exit 0
+fi
+
+exec >> $SNAP_COMMON/prepare-device-hook.log 2>&1
+
+# If you are forking and building your own gadget:
+# implement your preferred way of generating a serial number for this device here
+snapctl set registration.proposed-serial="\"$(date -u)\""
+
+snapctl set device-service.url="https://serial-vault-partners.canonical.com/v1/"
+snapctl set device-service.headers="{\"api-key\": \"$MODEL_APIKEY\"}"
