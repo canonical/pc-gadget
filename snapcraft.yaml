@@ -1,6 +1,6 @@
 name: pc
 adopt-info: pc
-version: '25.04-2'
+version: '25.10-1'
 type: gadget
 base: core24
 summary: Classic PC gadget for generic amd64 devices
@@ -19,8 +19,8 @@ parts:
       set -x
       # grub.conf lets snapd identify grub as the bootloader on boot
       install -m 644 /dev/null "$CRAFT_PART_INSTALL"/grub.conf
-      ./stage-from-series plucky grub-efi-amd64-signed
-      ./stage-from-series plucky shim-signed
+      ./stage-from-series questing grub-efi-amd64-signed
+      ./stage-from-series questing shim-signed
     organize:
       usr/lib/shim/shimx64.efi.dualsigned: shim.efi.signed
       usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed: grubx64.efi
