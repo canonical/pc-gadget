@@ -1,18 +1,14 @@
 name: pc
-version: '24-0.2'
+version: '26-0.1'
 type: gadget
-base: core24
+base: core26
 summary: PC gadget for generic devices
 description: |
     This gadget enables generic pc devices to work with Ubuntu Core
 confinement: strict
-grade: stable
+build-base: devel
+grade: devel
 icon: icon.png
-
-#package-repositories:
-# - type: apt
-#   ppa: ucdev/uc-staging-ppa
-#   priority: always
 
 hooks:
   prepare-device:
