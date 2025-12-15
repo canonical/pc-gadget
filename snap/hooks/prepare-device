@@ -1,23 +1,120 @@
-#!/bin/sh
+# #!/bin/sh
 
-# This file is included for reference purposes. If MODEL_APIKEY is not set
-# in snapcraft.yaml (as is the default), it is a no-op. For more about how
-# to use this script to connect a device to an IoT App Store, see
-#  - https://ubuntu.com/core/services/guide/serial-vault-overview
-#  - https://ubuntu.com/core/services/guide/connecting-devices
-#  - https://snapcraft.io/docs/gadget-snap#heading--prepare
+# # This hook implements the device-side portions of the Ubuntu Core secure
+# # onboarding flow.
+# #
+# # Responsibilities:
+# #  - Optionally configure the device-service endpoint and authentication
+# #    headers when MODEL_APIKEY is provided (e.g. for Serial Vault or a
+# #    private Brand Store). If MODEL_APIKEY is not set, this part is a no-op
+# #    and snapd defaults are used.
+# #  - Generate and persist a hardware identity keypair (RSA-2048) using
+# #    OpenSSL. The private key is stored in SNAP_SAVE_DATA and is generated
+# #    only once per device.
+# #
+# # This hook intentionally does NOT:
+# #  - Perform any network operations
+# #  - Contact the device service directly
+# #  - Sign request-ids or construct registration payloads
+# #
+# # Cryptographic proof of identity is handled later by the
+# # prepare-serial-request hook, which signs the request-id issued by snapd
+# # using the hardware identity private key generated here.
+# #
+# # This implementation follows the Ubuntu Core secure onboarding design
+# # # #
+# # The OpenSSL-based hardware identity is compatible with the standard
+# # RSA-SHA256 verification performed by the Model / Device Service.
 
-set -eu
 
-if [ -z "$MODEL_APIKEY" ] ; then
-    exit 0
-fi
 
-exec >> $SNAP_COMMON/prepare-device-hook.log 2>&1
+# set -eu
 
-# If you are forking and building your own gadget:
-# implement your preferred way of generating a serial number for this device here
-snapctl set registration.proposed-serial="\"$(date -u)\""
+# TAG="prepare-device"
 
-snapctl set device-service.url="https://serial-vault-partners.canonical.com/v1/"
-snapctl set device-service.headers="{\"api-key\": \"$MODEL_APIKEY\"}"
+# log_info() {
+#     printf "%s\n" "$1" | systemd-cat -t "$TAG" -p info
+# }
+
+# log_error() {
+#     printf "%s\n" "$1" | systemd-cat -t "$TAG" -p err
+# }
+
+# log_info "prepare-device: starting"
+
+# # ----------------------------------------------------------------------
+# # Resolve SNAP_DATA and SNAP_SAVE_DATA
+# # ----------------------------------------------------------------------
+# if [ -z "${SNAP_DATA:-}" ]; then
+#     log_error "SNAP_DATA is not set"
+#     exit 1
+# fi
+
+# if [ -z "${SNAP_SAVE_DATA:-}" ]; then
+#     SNAP_SAVE_DATA="$SNAP_DATA"
+# fi
+
+# LOG_FILE="$SNAP_DATA/prepare-device.log"
+
+# echo "prepare-device: started" >> "$LOG_FILE"
+# echo "SNAP_DATA=$SNAP_DATA" >> "$LOG_FILE"
+# echo "SNAP_SAVE_DATA=$SNAP_SAVE_DATA" >> "$LOG_FILE"
+
+# log_info "SNAP_DATA=$SNAP_DATA"
+# log_info "SNAP_SAVE_DATA=$SNAP_SAVE_DATA"
+
+# mkdir -p "$SNAP_SAVE_DATA"
+
+# # ----------------------------------------------------------------------
+# # OPTIONAL: Device-service / API configuration
+# # ----------------------------------------------------------------------
+# # This is a no-op unless MODEL_APIKEY is provided via snapcraft.yaml
+# # ----------------------------------------------------------------------
+
+# if [ -n "${MODEL_APIKEY:-}" ]; then
+#     log_info "MODEL_APIKEY provided — configuring device service"
+#     echo "MODEL_APIKEY provided" >> "$LOG_FILE"
+
+#     # Proposed serial MUST be a JSON string
+#     snapctl set registration.proposed-serial="\"$(date -u)\""
+
+#     # Serial / model service endpoint
+#     snapctl set device-service.url="https://serial-vault-partners.canonical.com/v1/"
+
+#     # API authentication header
+#     snapctl set device-service.headers="{\"api-key\":\"$MODEL_APIKEY\"}"
+# else
+#     log_info "MODEL_APIKEY not set — skipping device-service configuration"
+#     echo "MODEL_APIKEY not set" >> "$LOG_FILE"
+# fi
+
+# # ----------------------------------------------------------------------
+# # Generate hardware identity keypair (OpenSSL)
+# # ----------------------------------------------------------------------
+# KEY_PRIV="$SNAP_SAVE_DATA/hardware-id"
+# KEY_PUB="$SNAP_SAVE_DATA/hardware-id.pub"
+
+# if [ ! -f "$KEY_PRIV" ]; then
+#     log_info "Generating RSA-2048 hardware identity keypair"
+#     echo "Generating keypair at $KEY_PRIV" >> "$LOG_FILE"
+
+#     if ! openssl genrsa -out "$KEY_PRIV" 2048 >/dev/null 2>&1; then
+#         log_error "Failed to generate private key"
+#         exit 1
+#     fi
+
+#     if ! openssl rsa -in "$KEY_PRIV" -pubout -out "$KEY_PUB" >/dev/null 2>&1; then
+#         log_error "Failed to extract public key"
+#         exit 1
+#     fi
+
+#     log_info "Keypair created"
+#     echo "Keypair created" >> "$LOG_FILE"
+# else
+#     log_info "hardware-id keypair already exists"
+#     echo "hardware-id exists" >> "$LOG_FILE"
+# fi
+
+# log_info "prepare-device: finished"
+# echo "prepare-device: finished" >> "$LOG_FILE"
+# exit 0
