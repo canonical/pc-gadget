@@ -1,3 +1,18 @@
+# NOTE:
+# -----
+# This hook is intentionally commented out and provided for reference only.
+#
+# It documents an OpenSSL-based implementation of the device-side secure
+# onboarding flow, but is NOT enabled by default.
+#
+# This avoids changing runtime behavior while making the reference
+# implementation available for review, discussion, and future activation.
+#
+# To enable this hook, uncomment the script contents and ensure the hook
+# is marked executable.
+
+
+
 # #!/bin/sh
 
 # # This hook implements the device-side portions of the Ubuntu Core secure
