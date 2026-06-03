@@ -1,5 +1,5 @@
 name: pc
-version: '26.04-1'
+version: '26.10-1'
 type: gadget
 base: core24
 summary: PC gadget for generic devices
@@ -44,8 +44,8 @@ parts:
       - sbsigntool
     override-build: |
       set -x
-      $CRAFT_PROJECT_DIR/stage-from-series resolute grub-efi-$CRAFT_ARCH_BUILD_FOR-signed
-      $CRAFT_PROJECT_DIR/stage-from-series resolute shim-signed
+      $CRAFT_PROJECT_DIR/stage-from-series stonking grub-efi-$CRAFT_ARCH_BUILD_FOR-signed
+      $CRAFT_PROJECT_DIR/stage-from-series stonking shim-signed
 
       # Set some variables that depend on the architecture
       grub_target=x86_64
