@@ -2,7 +2,7 @@
 ARCHIVE=http://archive.ubuntu.com/ubuntu
 SERIES=$1
 PKG=$2
-ARCH=amd64
+ARCH=${CRAFT_ARCH_BUILD_FOR}
 if [ ! -d chdist/dist-$SERIES ]; then
     chdist -d "chdist" -a $ARCH create dist-$SERIES
     echo "deb $ARCHIVE $SERIES main" >"chdist"/dist-$SERIES/etc/apt/sources.list
