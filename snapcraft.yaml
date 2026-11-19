@@ -1,7 +1,7 @@
 name: pc
-version: '26.10-1'
+version: '27.04-1'
 type: gadget
-base: core24
+base: core26
 summary: PC gadget for generic devices
 description: |
     This gadget enables generic pc devices to work with Ubuntu Core
@@ -44,8 +44,8 @@ parts:
       - sbsigntool
     override-build: |
       set -x
-      $CRAFT_PROJECT_DIR/stage-from-series stonking grub-efi-$CRAFT_ARCH_BUILD_FOR-signed
-      $CRAFT_PROJECT_DIR/stage-from-series stonking shim-signed
+      $CRAFT_PROJECT_DIR/stage-from-series tenacious grub-efi-$CRAFT_ARCH_BUILD_FOR-signed
+      $CRAFT_PROJECT_DIR/stage-from-series tenacious shim-signed
 
       # Set some variables that depend on the architecture
       grub_target=x86_64
