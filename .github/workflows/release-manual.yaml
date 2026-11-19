@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build_releases:
@@ -19,6 +19,14 @@ jobs:
             architectures: amd64
           - base: 18
             architectures: amd64
+          - base: 20
+            architectures: amd64
+          - base: 22
+            architectures: amd64,arm64
+          - base: 24
+            architectures: amd64,arm64
+          - base: 26
+            architectures: amd64,arm64
     runs-on: ubuntu-latest
     environment: store
     steps:
