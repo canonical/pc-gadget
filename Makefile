@@ -63,7 +63,11 @@ all:
 	# BIOS boot partition must be defined with an absolute offset.  The
 	# particular value here is 2049, or 0x01 0x08 0x00 0x00 in little-endian.
 	/bin/echo -n -e '\x01\x08\x00\x00' | dd of=pc-core.img seek=500 bs=1 conv=notrunc
-	cp $(SNAPCRAFT_STAGE)/usr/lib/shim/shimx64.efi.signed shim.efi.signed
+	# From 15.7, the shim now ships
+	# shimx64.efi.signed.latest
+	# shimx64.efi.signed.previous
+	# shimx64.efi.dualsigned
+	cp $(SNAPCRAFT_STAGE)/usr/lib/shim/shimx64.efi.signed.latest shim.efi.signed
 	cp $(SNAPCRAFT_STAGE)/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed grubx64.efi
 	cp $(SNAPCRAFT_STAGE)/usr/lib/shim/mmx64.efi mmx64.efi
 
